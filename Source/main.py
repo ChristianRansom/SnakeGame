@@ -15,7 +15,7 @@ screen = pygame.display.set_mode((300,300))
 direction = "east"
 directionLock = False
 mySnake = Snake(0, 0, 0)
-food = snakefood.SnakeFood(screen, pygame)
+food = snakefood.SnakeFood(pygame)
 
 # define a main function
 def main():

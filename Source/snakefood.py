@@ -14,7 +14,7 @@ class SnakeFood(GameObject):
     '''
 
 
-    def __init__(self, screen, pygame, xValue = -1000, yValue = -1000):
+    def __init__(self, pygame, xValue = -1000, yValue = -1000):
         '''
         Constructor
         '''
@@ -27,13 +27,21 @@ class SnakeFood(GameObject):
         
     #This method doesn't create a new food. It just moves this food to a new random location 
     def spawnFood(self, pygame):
-        surface = pygame.display.get_surface()
         w, h = pygame.display.get_surface().get_size()
         tilesHeight = h / snakebody.SNAKE_BODY_SIZE
         tilesWidth = w / snakebody.SNAKE_BODY_SIZE
+        print("tilesw and tilesh ")
+        print(tilesWidth)
+        print(tilesHeight)
+        print("random location spawn")
         
-        self.x = random.randint(1, 1)
-        self.y = random.randint(1, 1)
+        
+        self.x = random.randrange(0, h + 1, 10)
+        self.y = random.randrange(0, w + 1, 10)
+
+        print("self x and y")
+        print(self.x)
+        print(self.y)
         
         
         
