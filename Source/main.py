@@ -36,7 +36,7 @@ def main():
     pygame.display.update()
     # define a variable to control the main loop
         
-    mySnake = snake.Snake(10, 50, 50)
+    mySnake = snake.Snake(3, 50, 50)
 
     #--------------Main Game Loop-----------------------#
     while running:

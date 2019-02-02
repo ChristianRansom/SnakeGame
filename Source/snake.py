@@ -21,19 +21,12 @@ class Snake(GameObject):
         '''
         self.q = deque()
         self.color = (0,128,0) #Green
-        self.head = snakebody.SnakeBody(xValue, yValue)
         self.alive = True
         
-        xValue = xValue - snakebody.SNAKE_BODY_SIZE * (bodyLength)
+        self.head = snakebody.SnakeBody(xValue, yValue)
+        for i in range(bodyLength):
+            self.grow(direction)
         
-        offset = snakebody.SNAKE_BODY_SIZE
-        for i in range(bodyLength - 1):
-            #print(offset)
-            self.q.append(snakebody.SnakeBody(xValue + offset, yValue))
-            offset = offset + snakebody.SNAKE_BODY_SIZE
-            
-        self.q.append(self.head)
-    
     def collide(self, other):
         return GameObject.collide(self.head, other)
     
