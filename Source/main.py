@@ -11,11 +11,11 @@ from snake import Snake
 import snakefood
 
 pygame.init()
-screen = pygame.display.set_mode((640,480))
+screen = pygame.display.set_mode((300,300))
 direction = "east"
 directionLock = False
 mySnake = Snake(0, 0, 0)
-food = snakefood.SnakeFood()
+food = snakefood.SnakeFood(screen, pygame)
 
 # define a main function
 def main():
@@ -96,8 +96,9 @@ def processInput():
 
 def render():
    
-    global mySnake
+    global mySnake, food
     mySnake.render(screen, pygame)
+    food.render(screen, pygame)
     pygame.display.update()
     
     
