@@ -64,6 +64,7 @@ def updateGame():
         mySnake.grow(direction)
         score = score + 100
     elif mySnake.wallCollide(pygame):
+        mySnake.die()
         print("YOU CRASHED!")
         pass #handle this somehow later when we have a menu and restart stuff 
     elif mySnake.selfCollide():

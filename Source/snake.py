@@ -20,7 +20,7 @@ class Snake(GameObject):
         Constructor
         '''
         self.q = deque()
-
+        self.color = (0,128,0) #Green
         self.head = snakebody.SnakeBody(xValue, yValue)
         
         xValue = xValue - snakebody.SNAKE_BODY_SIZE * (bodyLength)
@@ -56,6 +56,10 @@ class Snake(GameObject):
                     return True
             i = i + 1
         return False
+    
+    def die(self):
+        self.color = (128, 0, 0)
+        
     
     def grow(self, direction):
         newHead = copy.copy(self.head)
@@ -102,5 +106,5 @@ class Snake(GameObject):
         
     def render(self, screen, pygame):
         for aEntity in self.q:
-            aEntity.render(screen, pygame)
+            aEntity.render(screen, pygame, self.color)
             

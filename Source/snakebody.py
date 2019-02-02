@@ -5,7 +5,6 @@ Created on Jan 29, 2019
 '''
 from gameobject import GameObject
 
-bodyColor = (0,128,0)
 SNAKE_BODY_SIZE = 10
 
 class SnakeBody(GameObject):
@@ -18,15 +17,14 @@ class SnakeBody(GameObject):
         '''
         Constructor
         '''
-        global bodyColor, SNAKE_BODY_SIZE
-        self.bodyColor = bodyColor
+        global SNAKE_BODY_SIZE 
         self.SNAKE_BODY_SIZE = SNAKE_BODY_SIZE
         super().__init__(xValue, yValue)
-        
-    def render(self, screen, pygame):
-        global SNAKE_BODY_SIZE, bodyColor
-        pygame.draw.rect(screen, bodyColor, (self.x, self.y,SNAKE_BODY_SIZE,SNAKE_BODY_SIZE), 3)
+    
+    
+    def render(self, screen, pygame, color):
+        global SNAKE_BODY_SIZE
+        pygame.draw.rect(screen, color, (self.x, self.y,SNAKE_BODY_SIZE,SNAKE_BODY_SIZE), 3)
 
-        
     
         
