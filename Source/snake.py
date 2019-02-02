@@ -31,6 +31,23 @@ class Snake(GameObject):
     def collide(self, other):
         return GameObject.collide(self.head, other)
     
+    def grow(self, direction):
+        newHead = copy.copy(self.head)
+        if direction == "east":
+            newHead.setX(self.head.getX() + 10)
+            newHead.setY(self.head.getY())
+        elif direction == "west":
+            newHead.setX(self.head.getX() - 10)
+            newHead.setY(self.head.getY())
+        elif direction == "north":
+            newHead.setY(self.head.getY() - 10)
+            newHead.setX(self.head.getX())
+        elif direction == "south":
+            newHead.setY(self.head.getY() + 10)
+            newHead.setX(self.head.getX())
+        self.q.append(newHead)
+        self.head = newHead
+    
     def move(self, direction):
         tail = self.q.popleft()
         #print("head x " + str(head.getX()))

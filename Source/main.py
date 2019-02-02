@@ -82,8 +82,10 @@ def updateGame():
     global direction, directionLock, mySnake
     if mySnake.collide(food):
         food.spawnFood(pygame)
-    
-    mySnake.move(direction)
+        mySnake.grow(direction)
+    else:
+        mySnake.move(direction)
+        
     directionLock = False
     
 
