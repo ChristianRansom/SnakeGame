@@ -79,7 +79,9 @@ def updateGame():
         move tail to next move direction 
         
     '''
-    global direction, directionLock
+    global direction, directionLock, mySnake
+    if mySnake.collide(food):
+        food.spawnFood(pygame)
     
     mySnake.move(direction)
     directionLock = False

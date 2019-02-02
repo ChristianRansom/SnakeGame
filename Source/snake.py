@@ -27,7 +27,10 @@ class Snake(GameObject):
         for i in range(bodyLength - 1):
             self.q.append(snakebody.SnakeBody(xValue + offset, yValue))
             offset + snakebody.SNAKE_BODY_SIZE
-        
+    
+    def collide(self, other):
+        return GameObject.collide(self.head, other)
+    
     def move(self, direction):
         tail = self.q.popleft()
         #print("head x " + str(head.getX()))
@@ -59,3 +62,4 @@ class Snake(GameObject):
         screen.fill(white)
         for aEntity in self.q:
             aEntity.render(screen, pygame)
+            

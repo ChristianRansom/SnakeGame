@@ -23,3 +23,7 @@ class GameObject:
                 
     def getY(self):
         return self.y
+    
+    def collide(self, other):
+        return (self.x == other.x and self.y == other.y)
+            
