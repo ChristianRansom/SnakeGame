@@ -3,7 +3,7 @@ Created on Jan 29, 2019
 
 @author: Christian Ransom
 '''
-from gameobject import GameObject
+from game_object import GameObject
 
 SNAKE_BODY_SIZE = 10
 
@@ -13,13 +13,13 @@ class SnakeBody(GameObject):
     '''
 
     #spawns off screen by default
-    def __init__(self, xValue = -1000, yValue = -1000):
+    def __init__(self, x_value = -1000, y_value = -1000):
         '''
         Constructor
         '''
         global SNAKE_BODY_SIZE 
         self.SNAKE_BODY_SIZE = SNAKE_BODY_SIZE
-        super().__init__(xValue, yValue)
+        super().__init__(x_value, y_value)
     
     
     def render(self, screen, pygame, color):

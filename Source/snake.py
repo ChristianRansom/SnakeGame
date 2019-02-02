@@ -3,11 +3,11 @@ Created on Feb 1, 2019
 
 @author: Christian Ransom
 '''
-import gameobject
-import snakebody
+import game_object
+import snake_body
 from collections import deque
-from gameobject import GameObject
-import snakebody
+from game_object import GameObject
+import snake_body
 import copy
 
 class Snake(GameObject):
@@ -15,7 +15,7 @@ class Snake(GameObject):
     classdocs
     '''
     
-    def __init__(self, bodyLength, xValue, yValue, direction = "east"):
+    def __init__(self, body_length, x_value, y_value, direction = "east"):
         '''
         Constructor
         '''
@@ -23,84 +23,84 @@ class Snake(GameObject):
         self.color = (0,128,0) #Green
         self.alive = True
         
-        self.head = snakebody.SnakeBody(xValue, yValue)
-        for i in range(bodyLength):
+        self.head = snake_body.SnakeBody(x_value, y_value)
+        for i in range(body_length):
             self.grow(direction)
         
     def collide(self, other):
         return GameObject.collide(self.head, other)
     
-    def wallCollide(self, pygame):
+    def wall_collide(self, pygame):
         w, h = pygame.display.get_surface().get_size()
         return not (self.head.x >= 0 and self.head.y >= 0 and self.head.x < h and self.head.y < w)
 
-    def selfCollide(self):
+    def self_collide(self):
         #print("================check self collision================")
         #print("Head location")
         #print(self.head.x)
         #print(self.head.y)
         length = len(self.q) #skips the last body since its the head
         i = 0
-        for aEntity in self.q:
+        for body in self.q:
             #print("body location")
-            #print(aEntity.x)
-            #print(aEntity.y)
+            #print(body.x)
+            #print(body.y)
             if i < length - 1:
-                if self.head.collide(aEntity) and self.head != aEntity:
+                if self.head.collide(body) and self.head != body:
                     return True
             i = i + 1
         return False
     
     def die(self, pygame):
         self.color = (128, 0, 0)
-        deathSound = pygame.mixer.Sound("Computer Error Alert.wav")
-        deathSound.play()
+        death_sound = pygame.mixer.Sound("Computer Error Alert.wav")
+        death_sound.play()
         self.alive = False
     
     def grow(self, direction):
-        newHead = copy.copy(self.head)
+        new_head = copy.copy(self.head)
         if direction == "east":
-            newHead.setX(self.head.getX() + 10)
-            newHead.setY(self.head.getY())
+            new_head.set_x(self.head.get_x() + 10)
+            new_head.set_y(self.head.get_y())
         elif direction == "west":
-            newHead.setX(self.head.getX() - 10)
-            newHead.setY(self.head.getY())
+            new_head.set_x(self.head.get_x() - 10)
+            new_head.set_y(self.head.get_y())
         elif direction == "north":
-            newHead.setY(self.head.getY() - 10)
-            newHead.setX(self.head.getX())
+            new_head.set_y(self.head.get_y() - 10)
+            new_head.set_x(self.head.get_x())
         elif direction == "south":
-            newHead.setY(self.head.getY() + 10)
-            newHead.setX(self.head.getX())
-        self.q.append(newHead)
-        self.head = newHead
+            new_head.set_y(self.head.get_y() + 10)
+            new_head.set_x(self.head.get_x())
+        self.q.append(new_head)
+        self.head = new_head
     
     def move(self, direction):
         tail = self.q.popleft()
-        #print("head x " + str(head.getX()))
-        #print("head y " + str(head.getY()))
-        #print("tail x " + str(tail.getX()))
-        #print("tail y " + str(tail.getY()))
+        #print("head x " + str(head.get_x()))
+        #print("head y " + str(head.get_y()))
+        #print("tail x " + str(tail.get_x()))
+        #print("tail y " + str(tail.get_y()))
         
         #print("north " + str(north) + " south " + str(south) + " east " + str(east) + " west " + str(west))
         
         #Decide the direction of movement
         if direction == "east":
-            tail.setX(self.head.getX() + 10)
-            tail.setY(self.head.getY())
+            tail.set_x(self.head.get_x() + 10)
+            tail.set_y(self.head.get_y())
         elif direction == "west":
-            tail.setX(self.head.getX() - 10)
-            tail.setY(self.head.getY())
+            tail.set_x(self.head.get_x() - 10)
+            tail.set_y(self.head.get_y())
         elif direction == "north":
-            tail.setY(self.head.getY() - 10)
-            tail.setX(self.head.getX())
+            tail.set_y(self.head.get_y() - 10)
+            tail.set_x(self.head.get_x())
         elif direction == "south":
-            tail.setY(self.head.getY() + 10)
-            tail.setX(self.head.getX())
+            tail.set_y(self.head.get_y() + 10)
+            tail.set_x(self.head.get_x())
             
         self.head = copy.copy(tail)
         self.q.append(tail)
         
     def render(self, screen, pygame):
-        for aEntity in self.q:
-            aEntity.render(screen, pygame, self.color)
+        for body in self.q:
+            body.render(screen, pygame, self.color)
             

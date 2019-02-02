@@ -1,28 +1,27 @@
 '''
 Created on Jan 29, 2019
-
 @author: Christian Ransom
 '''
 # import the pygame module, so you can use it
 import pygame
 import snake
 from snake import Snake
-import snakefood
+import snake_food
 
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((300,300))
 direction = "east"
-directionLock = False
-mySnake = Snake(0, 0, 0)
-food = snakefood.SnakeFood(pygame)
+direction_lock = False
+game_snake = Snake(0, 0, 0)
+food = snake_food.SnakeFood(pygame)
 score = 0
 running = True
 
 # define a main function
 def main():
 
-    global directionLock, mySnake, running
+    global direction_lock, game_snake, running
     # initialize the pygame module
     # load and set the logo
     logo = pygame.image.load("SnakeIcon.jpg")
@@ -35,72 +34,70 @@ def main():
     #pygame.draw.rect(screen, (0,0,0), (10,10,10,10), 3)
     pygame.display.update()
     # define a variable to control the main loop
-        
-    mySnake = snake.Snake(3, 50, 50)
+    
+    game_snake = snake.Snake(3, 50, 50)
 
     #--------------Main Game Loop-----------------------#
     while running:
-        updateGame()
+        update_game()
         
         render()
         
         pygame.time.wait(100)
         
-        processInput()
+        process_input()
         
-    
-def updateGame():
+
+def update_game():
     #print("updating")
     ''' 
     if food eaten then handle food eaten
-        place new snakebody at next move direction
+        place new snake_body at next move direction
     else
         move tail to next move direction 
         
     '''
-    global direction, directionLock, mySnake, score
-    if mySnake.alive:
-        if mySnake.collide(food):
+    global direction, direction_lock, game_snake, score
+    if game_snake.alive:
+        if game_snake.collide(food):
             deathSound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
             deathSound.play()
-            food.spawnFood(pygame)
-            mySnake.grow(direction)
+            food.spawn_food(pygame)
+            game_snake.grow(direction)
             score = score + 100
-        elif mySnake.wallCollide(pygame):
-            mySnake.die(pygame)
+        elif game_snake.wall_collide(pygame):
+            game_snake.die(pygame)
             print("YOU CRASHED!")
             pass #handle this somehow later when we have a menu and restart stuff 
-        elif mySnake.selfCollide():
-            mySnake.die(pygame)
+        elif game_snake.self_collide():
+            game_snake.die(pygame)
             print("You collided with yourself")
-            #mySnake.move(direction)
+            #game_snake.move(direction)
         else:
-            mySnake.move(direction)
+            game_snake.move(direction)
         
-    directionLock = False
-    
+    direction_lock = False
 
 #do something cool
+def reset_directions():
+    global direction_lock
+    direction_lock = True
 
-def resetDirections():
-    global directionLock
-    directionLock = True
-
-def processInput(): #Handle inputs and events
+def process_input(): #Handle inputs and events
     global direction, running
     for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN and not directionLock: 
+        if event.type == pygame.KEYDOWN and not direction_lock: 
             if event.key == pygame.K_LEFT and direction != "east":
-                resetDirections()
+                reset_directions()
                 direction = "west"
             elif event.key == pygame.K_RIGHT and direction != "west":
-                resetDirections()
+                reset_directions()
                 direction = "east"
             elif event.key == pygame.K_DOWN and direction != "north":
-                resetDirections()
+                reset_directions()
                 direction = "south"
             elif event.key == pygame.K_UP and direction != "south":
-                resetDirections()   
+                reset_directions()   
                 direction = "north"
                 
         # only do something if the event is of type QUIT
@@ -109,23 +106,23 @@ def processInput(): #Handle inputs and events
             running = False
 
 def render():
-    global mySnake, food, score,pygame
+    global game_snake, food, score, pygame
     white = (255,255,255)
     screen.fill(white)
-    renderScore()
-    mySnake.render(screen, pygame)
+    render_score()
+    game_snake.render(screen, pygame)
     food.render(screen, pygame)
     pygame.display.update()
     
     
-def renderScore():
+def render_score():
     global score, pygame
     basicfont = pygame.font.SysFont(None, 30)
     text = basicfont.render(str(score), True, (100, 100, 100), (255, 255, 255))
-    textrect = text.get_rect()
-    textrect.bottomright = screen.get_rect().bottomright
-    textrect.x = textrect.x - screen.get_rect().right / 30
-    screen.blit(text, textrect)
+    text_rect = text.get_rect()
+    text_rect.bottomright = screen.get_rect().bottomright
+    text_rect.x = text_rect.x - screen.get_rect().right / 30
+    screen.blit(text, text_rect)
     
     
 # run the main function only if this module is executed as the main script
