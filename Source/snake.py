@@ -22,6 +22,7 @@ class Snake(GameObject):
         self.q = deque()
         self.color = (0,128,0) #Green
         self.head = snakebody.SnakeBody(xValue, yValue)
+        self.alive = True
         
         xValue = xValue - snakebody.SNAKE_BODY_SIZE * (bodyLength)
         
@@ -57,9 +58,11 @@ class Snake(GameObject):
             i = i + 1
         return False
     
-    def die(self):
+    def die(self, pygame):
         self.color = (128, 0, 0)
-        
+        deathSound = pygame.mixer.Sound("Computer Error Alert.wav")
+        deathSound.play()
+        self.alive = False
     
     def grow(self, direction):
         newHead = copy.copy(self.head)

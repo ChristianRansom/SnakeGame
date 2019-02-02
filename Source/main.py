@@ -6,11 +6,11 @@ Created on Jan 29, 2019
 # import the pygame module, so you can use it
 import pygame
 import snake
-from collections import deque
 from snake import Snake
 import snakefood
 
 pygame.init()
+pygame.mixer.init()
 screen = pygame.display.set_mode((300,300))
 direction = "east"
 directionLock = False
@@ -59,19 +59,23 @@ def updateGame():
         
     '''
     global direction, directionLock, mySnake, score
-    if mySnake.collide(food):
-        food.spawnFood(pygame)
-        mySnake.grow(direction)
-        score = score + 100
-    elif mySnake.wallCollide(pygame):
-        mySnake.die()
-        print("YOU CRASHED!")
-        pass #handle this somehow later when we have a menu and restart stuff 
-    elif mySnake.selfCollide():
-        print("You collided with yourself")
-        #mySnake.move(direction)
-    else:
-        mySnake.move(direction)
+    if mySnake.alive:
+        if mySnake.collide(food):
+            deathSound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
+            deathSound.play()
+            food.spawnFood(pygame)
+            mySnake.grow(direction)
+            score = score + 100
+        elif mySnake.wallCollide(pygame):
+            mySnake.die(pygame)
+            print("YOU CRASHED!")
+            pass #handle this somehow later when we have a menu and restart stuff 
+        elif mySnake.selfCollide():
+            mySnake.die(pygame)
+            print("You collided with yourself")
+            #mySnake.move(direction)
+        else:
+            mySnake.move(direction)
         
     directionLock = False
     
