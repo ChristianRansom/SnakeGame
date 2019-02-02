@@ -16,11 +16,13 @@ direction = "east"
 directionLock = False
 mySnake = Snake(0, 0, 0)
 food = snakefood.SnakeFood(pygame)
+score = 0
+running = True
 
 # define a main function
 def main():
 
-    global direction, directionLock, mySnake
+    global directionLock, mySnake, running
     # initialize the pygame module
     # load and set the logo
     logo = pygame.image.load("SnakeIcon.jpg")
@@ -33,42 +35,19 @@ def main():
     #pygame.draw.rect(screen, (0,0,0), (10,10,10,10), 3)
     pygame.display.update()
     # define a variable to control the main loop
-    
-    
-    running = True
-    
+        
     mySnake = snake.Snake(10, 50, 50)
 
-    # main loop
+    #--------------Main Game Loop-----------------------#
     while running:
-        # event handling, gets all event from the event queue
-        #processInput()
         updateGame()
+        
         render()
         
         pygame.time.wait(100)
         
-        for event in pygame.event.get():
-
-            #Handle user input
-            if event.type == pygame.KEYDOWN and not directionLock: 
-                if event.key == pygame.K_LEFT and direction != "east":
-                    resetDirections()
-                    direction = "west"
-                elif event.key == pygame.K_RIGHT and direction != "west":
-                    resetDirections()
-                    direction = "east"
-                elif event.key == pygame.K_DOWN and direction != "north":
-                    resetDirections()
-                    direction = "south"
-                elif event.key == pygame.K_UP and direction != "south":
-                    resetDirections()   
-                    direction = "north"
-                    
-            # only do something if the event is of type QUIT
-            if event.type == pygame.QUIT:
-                # change the value to False, to exit the main loop
-                running = False
+        processInput()
+        
     
 def updateGame():
     #print("updating")
@@ -79,12 +58,13 @@ def updateGame():
         move tail to next move direction 
         
     '''
-    global direction, directionLock, mySnake
+    global direction, directionLock, mySnake, score
     if mySnake.collide(food):
         food.spawnFood(pygame)
         mySnake.grow(direction)
+        score = score + 100
     elif mySnake.wallCollide(pygame):
-        print("YOU CRASSHEEDD")
+        print("YOU CRASHED!")
         pass #handle this somehow later when we have a menu and restart stuff 
     elif mySnake.selfCollide():
         print("You collided with yourself")
@@ -101,14 +81,46 @@ def resetDirections():
     global directionLock
     directionLock = True
 
-def processInput():
-    y = 0
+def processInput(): #Handle inputs and events
+    global direction, running
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and not directionLock: 
+            if event.key == pygame.K_LEFT and direction != "east":
+                resetDirections()
+                direction = "west"
+            elif event.key == pygame.K_RIGHT and direction != "west":
+                resetDirections()
+                direction = "east"
+            elif event.key == pygame.K_DOWN and direction != "north":
+                resetDirections()
+                direction = "south"
+            elif event.key == pygame.K_UP and direction != "south":
+                resetDirections()   
+                direction = "north"
+                
+        # only do something if the event is of type QUIT
+        if event.type == pygame.QUIT:
+            # change the value to False, to exit the main loop
+            running = False
 
 def render():
-    global mySnake, food
+    global mySnake, food, score,pygame
+    white = (255,255,255)
+    screen.fill(white)
+    renderScore()
     mySnake.render(screen, pygame)
     food.render(screen, pygame)
     pygame.display.update()
+    
+    
+def renderScore():
+    global score, pygame
+    basicfont = pygame.font.SysFont(None, 30)
+    text = basicfont.render(str(score), True, (100, 100, 100), (255, 255, 255))
+    textrect = text.get_rect()
+    textrect.bottomright = screen.get_rect().bottomright
+    textrect.x = textrect.x - screen.get_rect().right / 30
+    screen.blit(text, textrect)
     
     
 # run the main function only if this module is executed as the main script

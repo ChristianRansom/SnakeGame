@@ -41,16 +41,16 @@ class Snake(GameObject):
         return not (self.head.x >= 0 and self.head.y >= 0 and self.head.x < h and self.head.y < w)
 
     def selfCollide(self):
-        print("================check self collision================")
-        print("Head location")
-        print(self.head.x)
-        print(self.head.y)
+        #print("================check self collision================")
+        #print("Head location")
+        #print(self.head.x)
+        #print(self.head.y)
         length = len(self.q) #skips the last body since its the head
         i = 0
         for aEntity in self.q:
-            print("body location")
-            print(aEntity.x)
-            print(aEntity.y)
+            #print("body location")
+            #print(aEntity.x)
+            #print(aEntity.y)
             if i < length - 1:
                 if self.head.collide(aEntity) and self.head != aEntity:
                     return True
@@ -101,8 +101,6 @@ class Snake(GameObject):
         self.q.append(tail)
         
     def render(self, screen, pygame):
-        white = (255,255,255)
-        screen.fill(white)
         for aEntity in self.q:
             aEntity.render(screen, pygame)
             
