@@ -83,6 +83,8 @@ def updateGame():
     if mySnake.collide(food):
         food.spawnFood(pygame)
         mySnake.grow(direction)
+    elif mySnake.wallCollide(pygame):
+        print("YOU CRASSHEEDD")
     else:
         mySnake.move(direction)
         
@@ -99,7 +101,6 @@ def processInput():
     y = 0
 
 def render():
-   
     global mySnake, food
     mySnake.render(screen, pygame)
     food.render(screen, pygame)

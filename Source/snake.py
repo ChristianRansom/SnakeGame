@@ -31,6 +31,10 @@ class Snake(GameObject):
     def collide(self, other):
         return GameObject.collide(self.head, other)
     
+    def wallCollide(self, pygame):
+        w, h = pygame.display.get_surface().get_size()
+        return not (self.head.x >= 0 and self.head.y >= 0 and self.head.x < h and self.head.y < w)
+    
     def grow(self, direction):
         newHead = copy.copy(self.head)
         if direction == "east":
