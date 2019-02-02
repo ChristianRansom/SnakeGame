@@ -37,7 +37,7 @@ def main():
     
     running = True
     
-    mySnake = snake.Snake(6, 20, 20)
+    mySnake = snake.Snake(10, 50, 50)
 
     # main loop
     while running:
@@ -85,6 +85,10 @@ def updateGame():
         mySnake.grow(direction)
     elif mySnake.wallCollide(pygame):
         print("YOU CRASSHEEDD")
+        pass #handle this somehow later when we have a menu and restart stuff 
+    elif mySnake.selfCollide():
+        print("You collided with yourself")
+        #mySnake.move(direction)
     else:
         mySnake.move(direction)
         
