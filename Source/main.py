@@ -8,12 +8,14 @@ import pygame
 import snake
 from collections import deque
 from snake import Snake
+import snakefood
 
 pygame.init()
 screen = pygame.display.set_mode((640,480))
 direction = "east"
 directionLock = False
 mySnake = Snake(0, 0, 0)
+food = snakefood.SnakeFood()
 
 # define a main function
 def main():
@@ -96,7 +98,9 @@ def render():
    
     global mySnake
     mySnake.render(screen, pygame)
-     
+    pygame.display.update()
+    
+    
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)
 if __name__=="__main__":

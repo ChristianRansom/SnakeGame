@@ -25,8 +25,9 @@ class SnakeBody(GameObject):
         self.SNAKE_BODY_SIZE = 10
         super().__init__(xValue, yValue)
         
-    def render(self):
-        idkyet = 0  
+    def render(self, screen, pygame):
+        pygame.draw.rect(screen, (0,0,0), (self.x, self.y,10,10), 3)
+
         
     
         

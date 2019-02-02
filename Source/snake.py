@@ -7,7 +7,6 @@ import gameobject
 import snakebody
 from collections import deque
 from gameobject import GameObject
-from snakebody import SnakeBody
 import snakebody
 import copy
 
@@ -59,5 +58,4 @@ class Snake(GameObject):
         white = (255,255,255)
         screen.fill(white)
         for aEntity in self.q:
-            pygame.draw.rect(screen, (0,0,0), (aEntity.x,aEntity.y,10,10), 3)
-        pygame.display.update()
+            aEntity.render(screen, pygame)

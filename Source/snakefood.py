@@ -11,7 +11,7 @@ class SnakeFood(GameObject):
     '''
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -21,3 +21,4 @@ class SnakeFood(GameObject):
         
     def spawnFood(self):
         idkyet = 0 
+        
