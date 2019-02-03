@@ -3,19 +3,17 @@ Created on Feb 1, 2019
 
 @author: Christian Ransom
 '''
-import game_object
-import snake_body
 from collections import deque
 from game_object import GameObject
 import snake_body
 import copy
 
-class Snake(GameObject):
+class Snake():
     '''
     classdocs
     '''
     
-    def __init__(self, body_length, x_value, y_value, direction = "east"):
+    def __init__(self, body_length = 0, x_value = 0, y_value = 0, direction = "east"):
         '''
         Constructor
         '''
@@ -24,7 +22,7 @@ class Snake(GameObject):
         self.alive = True
         
         self.head = snake_body.SnakeBody(x_value, y_value)
-        for i in range(body_length):
+        for _ in range(body_length):
             self.grow(direction)
         
     def collide(self, other):
@@ -60,42 +58,42 @@ class Snake(GameObject):
     def grow(self, direction):
         new_head = copy.copy(self.head)
         if direction == "east":
-            new_head.set_x(self.head.get_x() + 10)
-            new_head.set_y(self.head.get_y())
+            new_head.x = self.head.x + 10
+            new_head.y = self.head.y
         elif direction == "west":
-            new_head.set_x(self.head.get_x() - 10)
-            new_head.set_y(self.head.get_y())
+            new_head.x = self.head.x - 10
+            new_head.y = self.head.y
         elif direction == "north":
-            new_head.set_y(self.head.get_y() - 10)
-            new_head.set_x(self.head.get_x())
+            new_head.y = self.head.y - 10
+            new_head.x = self.head.x
         elif direction == "south":
-            new_head.set_y(self.head.get_y() + 10)
-            new_head.set_x(self.head.get_x())
+            new_head.y = self.head.y + 10
+            new_head.x = self.head.x
         self.q.append(new_head)
         self.head = new_head
     
     def move(self, direction):
         tail = self.q.popleft()
-        #print("head x " + str(head.get_x()))
-        #print("head y " + str(head.get_y()))
-        #print("tail x " + str(tail.get_x()))
-        #print("tail y " + str(tail.get_y()))
+        #print("head x " + str(head.x()))
+        #print("head y " + str(head.y()))
+        #print("tail x " + str(tail.x()))
+        #print("tail y " + str(tail.y()))
         
         #print("north " + str(north) + " south " + str(south) + " east " + str(east) + " west " + str(west))
         
         #Decide the direction of movement
         if direction == "east":
-            tail.set_x(self.head.get_x() + 10)
-            tail.set_y(self.head.get_y())
+            tail.x = self.head.x + 10
+            tail.y = self.head.y
         elif direction == "west":
-            tail.set_x(self.head.get_x() - 10)
-            tail.set_y(self.head.get_y())
+            tail.x = self.head.x - 10
+            tail.y = self.head.y
         elif direction == "north":
-            tail.set_y(self.head.get_y() - 10)
-            tail.set_x(self.head.get_x())
+            tail.y = self.head.y - 10
+            tail.x = self.head.x
         elif direction == "south":
-            tail.set_y(self.head.get_y() + 10)
-            tail.set_x(self.head.get_x())
+            tail.y = self.head.y + 10
+            tail.x = self.head.x
             
         self.head = copy.copy(tail)
         self.q.append(tail)

@@ -13,7 +13,7 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((300,300))
 direction = "east"
 direction_lock = False
-game_snake = Snake(0, 0, 0)
+game_snake = Snake()
 food = snake_food.SnakeFood(pygame)
 score = 0
 running = True
@@ -36,14 +36,15 @@ def main():
     # define a variable to control the main loop
     
     game_snake = snake.Snake(3, 50, 50)
-
+ 
     #--------------Main Game Loop-----------------------#
     while running:
+        
+        pygame.time.wait(100)
+
         update_game()
         
         render()
-        
-        pygame.time.wait(100)
         
         process_input()
         

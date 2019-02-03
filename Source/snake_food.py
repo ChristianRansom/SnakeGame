@@ -4,15 +4,12 @@ Created on Jan 31, 2019
 @author: Christian Ransom
 '''
 from game_object import GameObject
-import snake_body
 import random 
-foodColor = (0,0,0)
 
 class SnakeFood(GameObject):
     '''
     classdocs
     '''
-
 
     def __init__(self, pygame, x_value = -1000, y_value = -1000):
         '''
@@ -20,10 +17,10 @@ class SnakeFood(GameObject):
         '''
         super().__init__(x_value, y_value)
         self.spawn_food(pygame)
+        self.food_color = (0,0,0)
     
     def render(self, screen, pygame):
-        global foodColor
-        pygame.draw.rect(screen, foodColor, (self.x, self.y,10,10), 3)
+        pygame.draw.rect(screen, self.food_color, (self.x, self.y,10,10), 3)
         
     #This method doesn't create a new food. It just moves this food to a new random location 
     def spawn_food(self, pygame):
