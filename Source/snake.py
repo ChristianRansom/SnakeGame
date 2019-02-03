@@ -50,9 +50,9 @@ class Snake():
         return False
     
     def die(self, pygame):
-        self.color = (128, 0, 0)
         death_sound = pygame.mixer.Sound("Computer Error Alert.wav")
         death_sound.play()
+        self.color = (128, 0, 0)
         self.alive = False
     
     def grow(self, direction):

@@ -8,8 +8,9 @@ import snake
 from snake import Snake
 import snake_food
 
-pygame.init()
+pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.mixer.init()
+pygame.init()
 screen = pygame.display.set_mode((300,300))
 direction = "east"
 direction_lock = False
@@ -17,6 +18,7 @@ game_snake = Snake()
 food = snake_food.SnakeFood(pygame)
 score = 0
 running = True
+eaten = False
 
 # define a main function
 def main():
@@ -40,14 +42,14 @@ def main():
     #--------------Main Game Loop-----------------------#
     while running:
         
-        pygame.time.wait(100)
+        process_input()
 
         update_game()
         
         render()
         
-        process_input()
-        
+        pygame.time.wait(100)
+
 
 def update_game():
     #print("updating")
@@ -58,14 +60,19 @@ def update_game():
         move tail to next move direction 
         
     '''
-    global direction, direction_lock, game_snake, score
+    global direction, direction_lock, game_snake, score, eaten
     if game_snake.alive:
-        if game_snake.collide(food):
-            deathSound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
-            deathSound.play()
+        if eaten:
             food.spawn_food(pygame)
             game_snake.grow(direction)
+            eaten = False
+        else:  
+            game_snake.move(direction)
+        if game_snake.collide(food):
+            eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
+            eat_sound.play()
             score = score + 100
+            eaten = True
         elif game_snake.wall_collide(pygame):
             game_snake.die(pygame)
             print("YOU CRASHED!")
@@ -74,8 +81,6 @@ def update_game():
             game_snake.die(pygame)
             print("You collided with yourself")
             #game_snake.move(direction)
-        else:
-            game_snake.move(direction)
         
     direction_lock = False
 
