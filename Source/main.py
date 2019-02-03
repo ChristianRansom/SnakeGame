@@ -19,12 +19,12 @@ score = 0
 running = True
 eaten = False
 SNAKE_SIZE = 20
-food = snake_food.SnakeFood(pygame, SNAKE_SIZE)
+food = 0
 
 # define a main function
 def main():
 
-    global direction_lock, game_snake, running
+    global direction_lock, game_snake, running, food
     # initialize the pygame module
     # load and set the logo
     logo = pygame.image.load("SnakeIcon.jpg")
@@ -39,7 +39,8 @@ def main():
     # define a variable to control the main loop
     
     game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
- 
+    food = snake_food.SnakeFood(pygame, SNAKE_SIZE, game_snake)
+
     #--------------Main Game Loop-----------------------#
     while running:
         
@@ -62,7 +63,7 @@ def update_game():
     global direction, direction_lock, game_snake, score, eaten
     if game_snake.alive:
         if eaten:
-            food.spawn_food(pygame)
+            food.spawn_food(pygame, game_snake)
             game_snake.grow(direction)
             eaten = False
         else:  

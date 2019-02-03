@@ -57,7 +57,7 @@ class Snake():
     
     def grow(self, direction):
         new_head = copy.copy(self.head)
-        print(self.head.size)
+        #print(self.head.size)
         if direction == "east":
             new_head.x = self.head.x + new_head.size
             new_head.y = self.head.y
