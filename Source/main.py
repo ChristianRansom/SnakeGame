@@ -11,14 +11,15 @@ import snake_food
 pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.mixer.init()
 pygame.init()
-screen = pygame.display.set_mode((300,300))
+screen = pygame.display.set_mode((240,240))
 direction = "east"
 direction_lock = False
 game_snake = Snake()
-food = snake_food.SnakeFood(pygame)
 score = 0
 running = True
 eaten = False
+SNAKE_SIZE = 20
+food = snake_food.SnakeFood(pygame, SNAKE_SIZE)
 
 # define a main function
 def main():
@@ -37,7 +38,7 @@ def main():
     pygame.display.update()
     # define a variable to control the main loop
     
-    game_snake = snake.Snake(3, 50, 50)
+    game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
  
     #--------------Main Game Loop-----------------------#
     while running:
@@ -50,9 +51,7 @@ def main():
         
         pygame.time.wait(100)
 
-
 def update_game():
-    #print("updating")
     ''' 
     if food eaten then handle food eaten
         place new snake_body at next move direction
@@ -76,7 +75,6 @@ def update_game():
         elif game_snake.wall_collide(pygame):
             game_snake.die(pygame)
             print("YOU CRASHED!")
-            pass #handle this somehow later when we have a menu and restart stuff 
         elif game_snake.self_collide():
             game_snake.die(pygame)
             print("You collided with yourself")
@@ -84,26 +82,22 @@ def update_game():
         
     direction_lock = False
 
-#do something cool
-def reset_directions():
-    global direction_lock
-    direction_lock = True
 
 def process_input(): #Handle inputs and events
-    global direction, running
+    global direction, running, direction_lock
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN and not direction_lock: 
             if event.key == pygame.K_LEFT and direction != "east":
-                reset_directions()
+                direction_lock = True
                 direction = "west"
             elif event.key == pygame.K_RIGHT and direction != "west":
-                reset_directions()
+                direction_lock = True
                 direction = "east"
             elif event.key == pygame.K_DOWN and direction != "north":
-                reset_directions()
+                direction_lock = True
                 direction = "south"
             elif event.key == pygame.K_UP and direction != "south":
-                reset_directions()   
+                direction_lock = True  
                 direction = "north"
                 
         # only do something if the event is of type QUIT

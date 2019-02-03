@@ -13,7 +13,7 @@ class Snake():
     classdocs
     '''
     
-    def __init__(self, body_length = 0, x_value = 0, y_value = 0, direction = "east"):
+    def __init__(self, body_length = 0, size = 20, x_value = 0, y_value = 0, direction = "east"):
         '''
         Constructor
         '''
@@ -21,7 +21,7 @@ class Snake():
         self.color = (0,128,0) #Green
         self.alive = True
         
-        self.head = snake_body.SnakeBody(x_value, y_value)
+        self.head = snake_body.SnakeBody(size, x_value, y_value)
         for _ in range(body_length):
             self.grow(direction)
         
@@ -57,17 +57,18 @@ class Snake():
     
     def grow(self, direction):
         new_head = copy.copy(self.head)
+        print(self.head.size)
         if direction == "east":
-            new_head.x = self.head.x + 10
+            new_head.x = self.head.x + new_head.size
             new_head.y = self.head.y
         elif direction == "west":
-            new_head.x = self.head.x - 10
+            new_head.x = self.head.x - new_head.size
             new_head.y = self.head.y
         elif direction == "north":
-            new_head.y = self.head.y - 10
+            new_head.y = self.head.y - new_head.size
             new_head.x = self.head.x
         elif direction == "south":
-            new_head.y = self.head.y + 10
+            new_head.y = self.head.y + new_head.size
             new_head.x = self.head.x
         self.q.append(new_head)
         self.head = new_head
@@ -79,20 +80,19 @@ class Snake():
         #print("tail x " + str(tail.x()))
         #print("tail y " + str(tail.y()))
         
-        #print("north " + str(north) + " south " + str(south) + " east " + str(east) + " west " + str(west))
         
         #Decide the direction of movement
         if direction == "east":
-            tail.x = self.head.x + 10
+            tail.x = self.head.x + tail.size
             tail.y = self.head.y
         elif direction == "west":
-            tail.x = self.head.x - 10
+            tail.x = self.head.x - tail.size
             tail.y = self.head.y
         elif direction == "north":
-            tail.y = self.head.y - 10
+            tail.y = self.head.y - tail.size
             tail.x = self.head.x
         elif direction == "south":
-            tail.y = self.head.y + 10
+            tail.y = self.head.y + tail.size
             tail.x = self.head.x
             
         self.head = copy.copy(tail)

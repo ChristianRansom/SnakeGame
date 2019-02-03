@@ -6,9 +6,10 @@ Created on Jan 29, 2019
 
 class GameObject:
     
-    def __init__(self, x_value, y_value):
+    def __init__(self, x_value, y_value, a_size):
         self.x = x_value
         self.y = y_value
+        self.size = a_size
         self.color = (255, 255, 255)
     
     def collide(self, other):
