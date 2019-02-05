@@ -12,12 +12,12 @@ class SnakeFood(GameObject):
     classdocs
     '''
 
-    def __init__(self, pygame, size, snake, x_value = -1000, y_value = -1000):
+    def __init__(self, pygame, size, a_snake, x_value = -1000, y_value = -1000):
         '''
         Constructor
         '''
         super().__init__(x_value, y_value, size)
-        self.spawn_food(pygame, snake)
+        self.spawn_food(pygame, a_snake)
         self.food_color = (0,0,0)
     
     def render(self, screen, pygame):
