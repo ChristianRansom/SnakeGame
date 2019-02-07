@@ -56,22 +56,8 @@ class Snake():
         self.alive = False
     
     def grow(self, direction):
-        new_head = copy.copy(self.head)
-        #print(self.head.size)
-        if direction == "east":
-            new_head.x = self.head.x + new_head.size
-            new_head.y = self.head.y
-        elif direction == "west":
-            new_head.x = self.head.x - new_head.size
-            new_head.y = self.head.y
-        elif direction == "north":
-            new_head.y = self.head.y - new_head.size
-            new_head.x = self.head.x
-        elif direction == "south":
-            new_head.y = self.head.y + new_head.size
-            new_head.x = self.head.x
-        self.q.append(new_head)
-        self.head = new_head
+        self.q.append(copy.copy(self.head))
+        self.move(direction)
     
     def move(self, direction):
         tail = self.q.popleft()
@@ -79,7 +65,6 @@ class Snake():
         #print("head y " + str(head.y()))
         #print("tail x " + str(tail.x()))
         #print("tail y " + str(tail.y()))
-        
         
         #Decide the direction of movement
         if direction == "east":
