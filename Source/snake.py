@@ -49,10 +49,11 @@ class Snake():
             i = i + 1
         return False
     
-    def die(self, pygame):
+    def die(self, pygame, screen):
+        self.color = (128, 0, 0)
+        print("dying and re-rendering while red")
         death_sound = pygame.mixer.Sound("Computer Error Alert.wav")
         death_sound.play()
-        self.color = (128, 0, 0)
         self.alive = False
     
     def grow(self, direction):

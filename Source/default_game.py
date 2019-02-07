@@ -52,12 +52,14 @@ class Default_Game(Game):
                 self.score = self.score + 100
                 self.eaten = True
             elif self.game_snake.wall_collide(pygame):
-                self.game_snake.die(pygame)
-                #my_menu = menu.Menu(self.game_snake)
+                self.game_snake.die(pygame, self.screen)
+                self.render()
+                my_menu = menu.Menu(self)
                 print("YOU CRASHED!")
             elif self.game_snake.self_collide():
-                self.game_snake.die(pygame)
-                #my_menu = menu.Menu(self.game_snake)
+                self.game_snake.die(pygame, self.screen)
+                self.render()
+                my_menu = menu.Menu(self)
                 print("You collided with yourself")
                 #game_snake.move(direction)
         self.direction_lock = False
@@ -99,3 +101,11 @@ class Default_Game(Game):
         text_rect.bottomright = self.screen.get_rect().bottomright
         text_rect.x = text_rect.x - self.screen.get_rect().right / 30
         self.screen.blit(text, text_rect)
+        
+    def restart(self):
+        self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
+        self.direction_lock = False
+        self.direction = "east"
+        self.score = 0
+        self.eaten = False
+
