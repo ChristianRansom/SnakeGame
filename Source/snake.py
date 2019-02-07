@@ -51,7 +51,6 @@ class Snake():
     
     def die(self, pygame, screen):
         self.color = (128, 0, 0)
-        print("dying and re-rendering while red")
         death_sound = pygame.mixer.Sound("Computer Error Alert.wav")
         death_sound.play()
         self.alive = False
