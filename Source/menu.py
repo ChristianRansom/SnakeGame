@@ -37,7 +37,7 @@ class Menu:
         self.root.rowconfigure(0, weight=1)
         
         
-        restart_button = ttk.Button(mainframe, text="Restart", command=self.new_snake).grid(column=2, row=1)
+        restart_button = ttk.Button(mainframe, text="Restart", command=self.restart_game).grid(column=2, row=1)
         quit_button = ttk.Button(mainframe, text="Quit", command=self.quit_game).grid(column=2, row=2)
         score = ttk.Label(mainframe, text = "Score: " + str(game.score), justify = CENTER).grid(column=2, row=3)
         score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=4)
@@ -46,11 +46,11 @@ class Menu:
         
         for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
         
-        self.root.bind('<Return>', self.new_snake)
+        self.root.bind('<Return>', self.restart_game)
         self.root.mainloop()
         
     #need args* paramater because its passed by tk for the input types of frames
-    def new_snake(self, *args):
+    def restart_game(self, *args):
         try:
             print("making a new snake")
             self.root.unbind("<Return>")
