@@ -11,7 +11,7 @@ class Game(object):
     classdocs
     '''
 
-    def __init__(self):
+    def __init__(self, game_speed = 10):
         '''
         Constructor
         '''
@@ -19,13 +19,15 @@ class Game(object):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.mixer.init()
         pygame.init()
-            
+        
+        self.game_speed = game_speed
         self.screen = pygame.display.set_mode((240,240))
         self.running = True
         white = (255,255,255)
         self.screen.fill(white)
         #pygame.draw.rect(screen, (0,0,0), (10,10,10,10), 3)
         pygame.display.update()
+        self.clock = pygame.time.Clock()
         
         
     def start(self):
@@ -38,7 +40,8 @@ class Game(object):
             
             self.render()
             
-            pygame.time.wait(100)
+            self.clock.tick(self.game_speed)
+            #pygame.time.wait(100)
 
 
     @abstractmethod
