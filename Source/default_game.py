@@ -28,6 +28,7 @@ class Default_Game(Game):
         self.direction = "east"
         self.score = 0
         self.eaten = False
+        self.keys_list = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]
         self.start()
         
 
@@ -70,16 +71,16 @@ class Default_Game(Game):
     def process_input(self): #Handle inputs and events
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and not self.direction_lock: 
-                if event.key == pygame.K_LEFT and self.direction != "east":
+                if event.key == self.keys_list[0] and self.direction != "east":
                     self.direction_lock = True
                     self.direction = "west"
-                elif event.key == pygame.K_RIGHT and self.direction != "west":
+                elif event.key == self.keys_list[1] and self.direction != "west":
                     self.direction_lock = True
                     self.direction = "east"
-                elif event.key == pygame.K_DOWN and self.direction != "north":
+                elif event.key == self.keys_list[2] and self.direction != "north":
                     self.direction_lock = True
                     self.direction = "south"
-                elif event.key == pygame.K_UP and self.direction != "south":
+                elif event.key == self.keys_list[3] and self.direction != "south":
                     self.direction_lock = True  
                     self.direction = "north"
                     
@@ -112,4 +113,5 @@ class Default_Game(Game):
         self.direction = "east"
         self.score = 0
         self.eaten = False
+
 

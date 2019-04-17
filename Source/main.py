@@ -11,7 +11,7 @@ import default_game
 def main():
     
     # initialize the pygame module and sound
-    pygame.mixer.pre_init(44100, -16, 2, 2048)
+    pygame.mixer.pre_init(44102, -16, 2, 2048)
     pygame.mixer.init()
     pygame.init()
     logo = pygame.image.load("SnakeIcon.jpg")
