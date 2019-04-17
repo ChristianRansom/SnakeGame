@@ -3,6 +3,7 @@ from tkinter import ttk, simpledialog
 import snake
 import default_game
 import sys
+import pygame
 
 class Menu: 
     
@@ -70,10 +71,10 @@ class Menu:
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         custom_keys = []
-        answer1 = simpledialog.askstring("Input", "Enter key for UP", parent= option_frame)
-        answer2 = simpledialog.askstring("Input", "Enter key for DOWN", parent= option_frame)
-        answer3 = simpledialog.askstring("Input", "Enter key for LEFT", parent= option_frame)
-        answer4 = simpledialog.askstring("Input", "Enter key for RIGHT", parent= option_frame)
+        answer1 = simpledialog.askstring("Input", "Enter key for LEFT", parent= option_frame)
+        answer2 = simpledialog.askstring("Input", "Enter key for RIGHT", parent= option_frame)
+        answer3 = simpledialog.askstring("Input", "Enter key for UP", parent= option_frame)
+        answer4 = simpledialog.askstring("Input", "Enter key for DOWN", parent= option_frame)
 
         custom_keys.append(answer1)
         custom_keys.append(answer2)
@@ -85,6 +86,7 @@ class Menu:
         print(custom_keys)
 
         self.restart_game()
+        self.default_game.keys_list = custom_keys #doesn't work quite yet
 
      
     
