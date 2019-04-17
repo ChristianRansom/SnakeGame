@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, simpledialog
 import snake
 import default_game
 import sys
@@ -39,8 +39,9 @@ class Menu:
         
         restart_button = ttk.Button(mainframe, text="Restart", command=self.restart_game).grid(column=2, row=1)
         quit_button = ttk.Button(mainframe, text="Quit", command=self.quit_game).grid(column=2, row=2)
-        score = ttk.Label(mainframe, text = "Score: " + str(game.score), justify = CENTER).grid(column=2, row=3)
-        score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=4)
+        keys_button = ttk.Button(mainframe, text="Change Keys", command=self.change_keys).grid(column=2, row=3)
+        score = ttk.Label(mainframe, text = "Score: " + str(game.score), justify = CENTER).grid(column=2, row=4)
+        score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=5)
 
         mainframe.focus_force()
         
@@ -61,6 +62,29 @@ class Menu:
         
     def quit_game(self):
         sys.exit(0)
+
+
+    def change_keys(self):
+        option_frame = ttk.Frame(self.root, padding="3 3 12 12")
+        option_frame.grid(column=0, row=0, sticky=(N, W, E, S))
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
+        custom_keys = []
+        answer1 = simpledialog.askstring("Input", "Enter key for UP", parent= option_frame)
+        answer2 = simpledialog.askstring("Input", "Enter key for DOWN", parent= option_frame)
+        answer3 = simpledialog.askstring("Input", "Enter key for LEFT", parent= option_frame)
+        answer4 = simpledialog.askstring("Input", "Enter key for RIGHT", parent= option_frame)
+
+        custom_keys.append(answer1)
+        custom_keys.append(answer2)
+        custom_keys.append(answer3)
+        custom_keys.append(answer4)
+
+
+        print(answer1, answer2, answer3, answer4)
+        print(custom_keys)
+
+        self.restart_game()
 
      
     
