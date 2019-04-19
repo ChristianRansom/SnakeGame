@@ -28,8 +28,10 @@ class Default_Game(Game):
         self.direction = "east"
         self.score = 0
         self.eaten = False
-        self.keys_list = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]
+        self.keys_list = self.game_snake.controls #grab the created snake objects control scheme
         self.start()
+
+
         
 
     def update_game(self):
@@ -66,6 +68,7 @@ class Default_Game(Game):
                 my_menu = menu.Menu(self)
                 print("You collided with yourself")
                 #game_snake.move(direction)
+
         self.direction_lock = False
  
     def process_input(self): #Handle inputs and events
@@ -74,6 +77,7 @@ class Default_Game(Game):
                 if event.key == self.keys_list[0] and self.direction != "east":
                     self.direction_lock = True
                     self.direction = "west"
+                    print(self.keys_list[0])
                 elif event.key == self.keys_list[1] and self.direction != "west":
                     self.direction_lock = True
                     self.direction = "east"
@@ -83,7 +87,8 @@ class Default_Game(Game):
                 elif event.key == self.keys_list[3] and self.direction != "south":
                     self.direction_lock = True  
                     self.direction = "north"
-                    
+                elif event.key == ord('p'):
+                    pause_menu = menu.Menu(self)
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop

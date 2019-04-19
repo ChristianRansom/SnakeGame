@@ -40,9 +40,10 @@ class Menu:
         
         restart_button = ttk.Button(mainframe, text="Restart", command=self.restart_game).grid(column=2, row=1)
         quit_button = ttk.Button(mainframe, text="Quit", command=self.quit_game).grid(column=2, row=2)
-        keys_button = ttk.Button(mainframe, text="Change Keys", command=self.change_keys).grid(column=2, row=3)
-        score = ttk.Label(mainframe, text = "Score: " + str(game.score), justify = CENTER).grid(column=2, row=4)
-        score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=5)
+        continue_button = ttk.Button(mainframe, text="Continue", command=self.continue_game).grid(column=2, row=3)
+        keys_button = ttk.Button(mainframe, text="Change Keys", command=self.change_keys).grid(column=2, row=4)
+        score = ttk.Label(mainframe, text = "Score: " + str(game.score), justify = CENTER).grid(column=2, row=5)
+        score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=6)
 
         mainframe.focus_force()
         
@@ -65,6 +66,10 @@ class Menu:
         sys.exit(0)
 
 
+    def continue_game(self):
+        self.root.destroy()  #when game is paused, closes the menu and goes back to the running game frame
+
+
     def change_keys(self):
         option_frame = ttk.Frame(self.root, padding="3 3 12 12")
         option_frame.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -73,20 +78,22 @@ class Menu:
         custom_keys = []
         answer1 = simpledialog.askstring("Input", "Enter key for LEFT", parent= option_frame)
         answer2 = simpledialog.askstring("Input", "Enter key for RIGHT", parent= option_frame)
-        answer3 = simpledialog.askstring("Input", "Enter key for UP", parent= option_frame)
-        answer4 = simpledialog.askstring("Input", "Enter key for DOWN", parent= option_frame)
+        answer3 = simpledialog.askstring("Input", "Enter key for DOWN", parent= option_frame)
+        answer4 = simpledialog.askstring("Input", "Enter key for UP", parent= option_frame)
 
-        custom_keys.append(answer1)
-        custom_keys.append(answer2)
-        custom_keys.append(answer3)
-        custom_keys.append(answer4)
+        custom_keys.append(ord(answer1)) # ord() returns the character in Unicode
+        custom_keys.append(ord(answer2)) # if your print a Pygame key, it also gives you the unicode so using ord() "translates" the string in to its Pygame key
+        custom_keys.append(ord(answer3))
+        custom_keys.append(ord(answer4))
 
 
-        print(answer1, answer2, answer3, answer4)
-        print(custom_keys)
+        #print(answer1, answer2, answer3, answer4)
+        #print(custom_keys)
 
+        #self.restart_game()
+        self.default_game.keys_list = custom_keys
         self.restart_game()
-        self.default_game.keys_list = custom_keys #doesn't work quite yet
+        #print(default_game.keys_list)
 
      
     

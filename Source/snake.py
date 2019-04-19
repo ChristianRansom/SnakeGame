@@ -7,6 +7,7 @@ from collections import deque
 from game_object import GameObject
 import snake_body
 import copy
+import pygame
 
 class Snake():
     '''
@@ -20,6 +21,9 @@ class Snake():
         self.q = deque()
         self.color = (0,128,0) #Green
         self.alive = True
+
+        #the default control scheme for a game. The controls are set at the snake object to allow for the possibility of multiple snakes with different controls
+        self.controls = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]
         
         self.head = snake_body.SnakeBody(size, x_value, y_value)
         for _ in range(body_length):
