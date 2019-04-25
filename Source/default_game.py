@@ -65,8 +65,12 @@ class Default_Game(Game):
                 print("YOU CRASHED!")
 
                 '''
+                #MAIN
+                print("XHead:" + str(self.game_snake.head.x))
+                print("YHead:" + str(self.game_snake.head.y))
 
                 self.otherside()
+                
             elif self.game_snake.self_collide():
                 self.game_snake.die(pygame, self.screen)
                 self.render()
@@ -81,27 +85,30 @@ class Default_Game(Game):
       
         
         #right side case
-        if self.game_snake.head.x == 24:
+        if self.game_snake.head.x >= 24:
           tail = self.game_snake.q.popleft()
           tail.x = 0
           tail.y = self.game_snake.head.y 
           #now set to the otherside ^^^
-          self.head = copy.copy(tail)
+          self.game_snake.head = copy.copy(tail)
+
+          print("XHeadwithin:" + str(self.game_snake.head.x))
           self.game_snake.q.append(tail)
           #moves to other side but then move to the right no longer works; 
           #^^I think it doesn't have a tail size anymore to count and therefore can't advance
-
+        '''
         #left side case
-        if self.game_snake.head.x == 0: 
+        if self.game_snake.head.x >= 0: 
           tail = self.game_snake.q.popleft()
           tail.x = 24
           tail.y = self.game_snake.head.y 
           #now set to the otherside ^^^
           self.head = copy.copy(tail)
           self.game_snake.q.append(tail)
+         
 
         #top side case
-        if self.game_snake.head.y == 0:
+        if self.game_snake.head.y >= 0:
           tail = self.game_snake.q.popleft()
           tail.x = self.game_snake.head.x
           tail.y = 24 
@@ -110,14 +117,14 @@ class Default_Game(Game):
           self.game_snake.q.append(tail)
 
         #bottom side case
-        if self.game_snake.head.y == 24:
+        if self.game_snake.head.y >= 24:
           tail = self.game_snake.q.popleft()
           tail.x = self.game_snake.head.x
           tail.y = 0 
           #now set to the otherside ^^^
           self.head = copy.copy(tail)
           self.game_snake.q.append(tail)
-        
+       ''' 
 
         
 
