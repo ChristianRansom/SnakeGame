@@ -9,6 +9,7 @@ from snake import Snake
 import snake_food
 import menu
 import pygame
+import copy
 
 SNAKE_SIZE = 20
 
@@ -55,18 +56,73 @@ class Default_Game(Game):
                 self.score = self.score + 100
                 self.eaten = True
             elif self.game_snake.wall_collide(pygame):
+                #get coordinates of the head to give to function to know which wall
+                #self.head.get
+                '''
                 self.game_snake.die(pygame, self.screen)
                 self.render()
                 my_menu = menu.Menu(self)
                 print("YOU CRASHED!")
+
+                '''
+
+                self.otherside()
             elif self.game_snake.self_collide():
                 self.game_snake.die(pygame, self.screen)
                 self.render()
-                my_menu = menu.Menu(self)
+           #     my_menu = menu.Menu(self)
                 print("You collided with yourself")
                 #game_snake.move(direction)
         self.direction_lock = False
- 
+
+    def otherside(self):
+        #number of squares 
+        w, h = pygame.display.get_surface().get_size()
+      
+        
+        #right side case
+        if self.game_snake.head.x == 24:
+          tail = self.game_snake.q.popleft()
+          tail.x = 0
+          tail.y = self.game_snake.head.y 
+          #now set to the otherside ^^^
+          self.head = copy.copy(tail)
+          self.game_snake.q.append(tail)
+          #moves to other side but then move to the right no longer works; 
+          #^^I think it doesn't have a tail size anymore to count and therefore can't advance
+
+        #left side case
+        if self.game_snake.head.x == 0: 
+          tail = self.game_snake.q.popleft()
+          tail.x = 24
+          tail.y = self.game_snake.head.y 
+          #now set to the otherside ^^^
+          self.head = copy.copy(tail)
+          self.game_snake.q.append(tail)
+
+        #top side case
+        if self.game_snake.head.y == 0:
+          tail = self.game_snake.q.popleft()
+          tail.x = self.game_snake.head.x
+          tail.y = 24 
+          #now set to the otherside ^^^
+          self.head = copy.copy(tail)
+          self.game_snake.q.append(tail)
+
+        #bottom side case
+        if self.game_snake.head.y == 24:
+          tail = self.game_snake.q.popleft()
+          tail.x = self.game_snake.head.x
+          tail.y = 0 
+          #now set to the otherside ^^^
+          self.head = copy.copy(tail)
+          self.game_snake.q.append(tail)
+        
+
+        
+
+
+
     def process_input(self): #Handle inputs and events
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and not self.direction_lock: 
@@ -112,4 +168,5 @@ class Default_Game(Game):
         self.direction = "east"
         self.score = 0
         self.eaten = False
+
 
