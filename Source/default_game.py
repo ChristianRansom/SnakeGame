@@ -82,49 +82,37 @@ class Default_Game(Game):
     def otherside(self):
         #number of squares 
         w, h = pygame.display.get_surface().get_size()
-      
+        tail = self.game_snake.q.popleft()
         
         #right side case
-        if self.game_snake.head.x >= 24:
-          tail = self.game_snake.q.popleft()
+        if self.game_snake.head.x >= w:
           tail.x = 0
           tail.y = self.game_snake.head.y 
           #now set to the otherside ^^^
-          self.game_snake.head = copy.copy(tail)
 
-          print("XHeadwithin:" + str(self.game_snake.head.x))
-          self.game_snake.q.append(tail)
-          #moves to other side but then move to the right no longer works; 
-          #^^I think it doesn't have a tail size anymore to count and therefore can't advance
-        '''
         #left side case
-        if self.game_snake.head.x >= 0: 
-          tail = self.game_snake.q.popleft()
-          tail.x = 24
+        if self.game_snake.head.x < 0:
+          tail.x = w - tail.size
           tail.y = self.game_snake.head.y 
           #now set to the otherside ^^^
-          self.head = copy.copy(tail)
-          self.game_snake.q.append(tail)
-         
-
+          
         #top side case
-        if self.game_snake.head.y >= 0:
-          tail = self.game_snake.q.popleft()
+        if self.game_snake.head.y < 0:
+          tail.y = h - tail.size
           tail.x = self.game_snake.head.x
-          tail.y = 24 
           #now set to the otherside ^^^
-          self.head = copy.copy(tail)
-          self.game_snake.q.append(tail)
-
+       
         #bottom side case
-        if self.game_snake.head.y >= 24:
-          tail = self.game_snake.q.popleft()
+        if self.game_snake.head.y >= h:
           tail.x = self.game_snake.head.x
           tail.y = 0 
           #now set to the otherside ^^^
-          self.head = copy.copy(tail)
-          self.game_snake.q.append(tail)
-       ''' 
+      
+    
+        self.game_snake.head = copy.copy(tail)
+        self.game_snake.q.append(tail)
+        
+       
 
         
 
