@@ -29,8 +29,12 @@ class Default_Game(Game):
         self.direction = "east"
         self.score = 0
         self.eaten = False
+        #set default for passing through walls
+        self.passthrough = False
+        self.crashed = False
+        print(self.passthrough)
         self.start()
-        
+
 
     def update_game(self):
         ''' 
@@ -68,13 +72,21 @@ class Default_Game(Game):
                 #MAIN
                 print("XHead:" + str(self.game_snake.head.x))
                 print("YHead:" + str(self.game_snake.head.y))
-
-                self.otherside()
+                print(self.passthrough)
+                if self.passthrough == True:
+                  self.otherside()
+                else:
+                  crashed = True
+                  if crashed == True:
+                    print("you crashed")
+                    self.game_snake.die(pygame, self.screen)
+                    self.render()
+                    crashed = False
                 
             elif self.game_snake.self_collide():
                 self.game_snake.die(pygame, self.screen)
                 self.render()
-           #     my_menu = menu.Menu(self)
+                #my_menu = menu.Menu(self)
                 print("You collided with yourself")
                 #game_snake.move(direction)
         self.direction_lock = False
