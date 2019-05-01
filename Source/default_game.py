@@ -30,7 +30,8 @@ class Default_Game(Game):
         self.score = 0
         self.eaten = False
         #set default for passing through walls
-        self.passthrough = False
+        self.passthrough = True
+        #set default for crash checker
         self.crashed = False
         print(self.passthrough)
         self.start()
@@ -46,6 +47,7 @@ class Default_Game(Game):
         '''
         if self.game_snake.alive:
             if self.eaten:
+                #if food is eaten, grow
                 self.food.spawn_food(pygame, self.game_snake)
                 self.game_snake.grow(self.direction)
                 self.eaten = False
@@ -55,37 +57,36 @@ class Default_Game(Game):
                 move_sound.play()
                 self.game_snake.move(self.direction)
             if self.game_snake.collide(self.food):
+                #colliding with food
                 eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
                 eat_sound.play()
                 self.score = self.score + 100
                 self.eaten = True
             elif self.game_snake.wall_collide(pygame):
-                #get coordinates of the head to give to function to know which wall
-                #self.head.get
-                '''
-                self.game_snake.die(pygame, self.screen)
-                self.render()
-                my_menu = menu.Menu(self)
-                print("YOU CRASHED!")
-
-                '''
                 #MAIN
+                #printing out the x and y coordiantes 
                 print("XHead:" + str(self.game_snake.head.x))
                 print("YHead:" + str(self.game_snake.head.y))
-                print(self.passthrough)
+                #printing out the if passthrough is on or off(True or False)
+                print("is passthrough on? " + str(self.passthrough))
                 if self.passthrough == True:
+                  #if passthrough is true by the boolean than use the function
                   self.otherside()
                 else:
+                  #if passthrough is false than you hav indeed crashed
+                  #set crashed checker to true
                   crashed = True
                   if crashed == True:
                     print("you crashed")
                     self.game_snake.die(pygame, self.screen)
                     self.render()
+                    #set crashed to false so that it only states once and stops loop
                     crashed = False
                 
             elif self.game_snake.self_collide():
                 self.game_snake.die(pygame, self.screen)
                 self.render()
+                #menu was throwing errors when I tested it
                 #my_menu = menu.Menu(self)
                 print("You collided with yourself")
                 #game_snake.move(direction)
@@ -120,7 +121,7 @@ class Default_Game(Game):
           tail.y = 0 
           #now set to the otherside ^^^
       
-    
+        #attach head to tale and the rest will follow
         self.game_snake.head = copy.copy(tail)
         self.game_snake.q.append(tail)
         
@@ -159,7 +160,7 @@ class Default_Game(Game):
         self.food.render(self.screen, pygame)
         pygame.display.update()
     
-    
+    #create text and place in text box
     def render_score(self):
         basicfont = pygame.font.SysFont(None, 30)
         text = basicfont.render(str(self.score), True, (100, 100, 100), (255, 255, 255))
