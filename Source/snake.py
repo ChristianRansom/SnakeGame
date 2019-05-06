@@ -21,6 +21,7 @@ class Snake():
         self.q = deque()
         self.color = (0,128,0) #Green
         self.alive = True
+        self.no_damage = False
 
         #the default control scheme for a game. The controls are set at the snake object to allow for the possibility of multiple snakes with different controls
         self.controls = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]
@@ -62,6 +63,12 @@ class Snake():
     def grow(self, direction):
         self.q.append(copy.copy(self.head))
         self.move(direction)
+
+    def shrink(self, direction):
+        if len(self.q) > 1:
+            self.q.reverse()
+            self.q.pop()
+            self.q.reverse()
     
     def move(self, direction):
         tail = self.q.popleft()

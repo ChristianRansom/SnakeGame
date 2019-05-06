@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import ttk, simpledialog
+
 import snake
 import default_game
 import sys
+
 import pygame
 
 class Menu: 
@@ -71,15 +73,20 @@ class Menu:
 
 
     def change_keys(self):
-        option_frame = ttk.Frame(self.root, padding="3 3 12 12")
-        option_frame.grid(column=0, row=0, sticky=(N, W, E, S))
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
+
+
         custom_keys = []
-        answer1 = simpledialog.askstring("Input", "Enter key for LEFT", parent= option_frame)
-        answer2 = simpledialog.askstring("Input", "Enter key for RIGHT", parent= option_frame)
-        answer3 = simpledialog.askstring("Input", "Enter key for DOWN", parent= option_frame)
-        answer4 = simpledialog.askstring("Input", "Enter key for UP", parent= option_frame)
+
+
+        answer1 = simpledialog.askstring("Input", "Enter key for LEFT")
+
+        answer2 = simpledialog.askstring("Input", "Enter key for RIGHT")
+
+        answer3 = simpledialog.askstring("Input", "Enter key for DOWN")
+        answer4 = simpledialog.askstring("Input", "Enter key for UP")
+
+
+
 
         custom_keys.append(ord(answer1)) # ord() returns the character in Unicode
         custom_keys.append(ord(answer2)) # if your print a Pygame key, it also gives you the unicode so using ord() "translates" the string in to its Pygame key
@@ -87,13 +94,19 @@ class Menu:
         custom_keys.append(ord(answer4))
 
 
-        #print(answer1, answer2, answer3, answer4)
-        #print(custom_keys)
-
         #self.restart_game()
         self.default_game.keys_list = custom_keys
-        self.restart_game()
-        #print(default_game.keys_list)
+
+        #self.restart_game()
+
+def key(event):
+    key_list = []
+    if event.char == event.keysym:
+        key_list.append(event)
+
+
+    print(key_list)
+
 
      
     
