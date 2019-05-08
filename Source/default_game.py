@@ -27,6 +27,7 @@ class Default_Game(Game):
         self.direction_lock = False
         self.direction = "east"
         self.score = 0
+        self.player_name = ""
         self.eaten = False
         self.start()
         

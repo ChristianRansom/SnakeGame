@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, simpledialog
 import snake
 import default_game
 import sys
@@ -16,6 +16,10 @@ class Menu:
         self.root = Tk()
         self.root.title("Snake")
         self.winner = False
+        
+        self.get_player_name()
+
+        
         try:
             score_file = open("HighScore.txt", "r")
         except FileNotFoundError:
@@ -48,6 +52,7 @@ class Menu:
         #score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=4)
         
         
+        
         self.save_score(mainframe)
         
 
@@ -60,7 +65,7 @@ class Menu:
             img = ImageTk.PhotoImage(Image.open("trophy.png"))
             canvas.create_image(20,20, anchor=NW, image=img)
         
-        mainframe.focus_force()
+        #mainframe.focus_force()
         
         for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
         
@@ -79,6 +84,9 @@ class Menu:
         
     def quit_game(self):
         sys.exit(0)
+        
+    def get_player_name(self):
+         self.default_game.player_name = simpledialog.askstring("Input", "Enter your name", initialvalue=self.default_game.player_name)
 
      
     def save_score(self, mainframe):
@@ -90,9 +98,9 @@ class Menu:
             clientSocket.connect((server_name, serverPort))
             
             message_type = "Submit Score"
-            player_name = "Christian_Ransom"
+            player_name = self.default_game.player_name
             game_type = "Default"
-            game_version = "1.0"
+            game_version = "1.2"
             extra = "File"
             
             score_message = message_type + "|" + str(self.default_game.score) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
