@@ -24,9 +24,6 @@ class Menu:
         
         #self.local_score_save(game)
         
-        #self.save_score(mainframe)
-
-        #self.display_score(mainframe)
         
        
         #self.root.after(1000, self.get_player_name)
@@ -43,18 +40,21 @@ class Menu:
         self.e1.insert(END, self.game.player_name)
         
         submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
-        submit_name_btn.grid(column=0, row=1)
-        cancel_btn = ttk.Button(root, text="Skip", command=self.restart_game).grid(column=1, row=1)
+        submit_name_btn.grid(column=0, row=2)
+        cancel_btn = ttk.Button(root, text="Skip", command=self.restart_game).grid(column=1, row=2)
         self.e1.focus_force()
         self.root.bind('<Return>', self.submit_player_name)
 
         
     def submit_player_name(self,  *args):
-        self.game.player_name = self.e1.get()
-            
-        for child in self.root.winfo_children():
-            child.destroy()
-        self.build_score_display()
+        input = self.e1.get()
+        if(input == "" or ' ' in input or ',' in input): #checks for valid name input
+            Label(self.root, text="Name cannot be empty, contain spaces, or contain commas").grid(row=1, columnspan=2)
+        else:
+            self.game.player_name = input
+            for child in self.root.winfo_children():
+                child.destroy()
+            self.build_score_display()
         
 
     #need args* paramater because its passed by tk for the input types of frames
@@ -70,6 +70,8 @@ class Menu:
     def build_score_display(self):
         root = self.root
         
+
+        
         mainframe = ttk.Frame(root, padding="3 3 12 12")
         mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         root.columnconfigure(0, weight=1)
@@ -79,6 +81,10 @@ class Menu:
         quit_button = ttk.Button(mainframe, text="Quit", command=self.quit_game).grid(column=2, row=2)
         score = ttk.Label(mainframe, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
         
+        self.save_score(mainframe)
+        
+        self.display_score(mainframe)
+
         if self.winner:
             canvas = Canvas(mainframe, width = 300, height = 300)
             canvas.grid(column=2, row=6)
@@ -93,8 +99,6 @@ class Menu:
         
     def quit_game(self):
         sys.exit(0)
-        
-
         
     def save_score(self, mainframe):
         try:
