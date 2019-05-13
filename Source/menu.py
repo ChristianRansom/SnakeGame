@@ -5,59 +5,79 @@ import default_game
 import sys
 import tkinter.scrolledtext as tkst
 from socket import *
-import pickle
 from PIL import ImageTk,Image  
 
 class Menu: 
     
     def __init__(self, game):
-        
-        self.default_game = game
+    
         self.root = Tk()
-        self.root.title("Snake")
+        self.game = game
         self.winner = False
         
-        self.get_player_name()
+        self.root.title("Snake")
+        
+        #self.build_score_display(self.root)
+        
+        self.get_player_name(self.root)
+        #self.end_screen(self.root)
+        
+        #self.local_score_save(game)
+        
+        #self.save_score(mainframe)
+
+        #self.display_score(mainframe)
+        
+       
+        #self.root.after(1000, self.get_player_name)
+
+        self.root.mainloop()
+    
+    
+    def get_player_name(self, root):
+        Label(root, text="Name").grid(row=0)
+        
+        self.e1 = Entry(root)
+        
+        self.e1.grid(row=0, column=1)
+        self.e1.insert(END, self.game.player_name)
+        
+        submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
+        submit_name_btn.grid(column=0, row=1)
+        cancel_btn = ttk.Button(root, text="Skip", command=self.restart_game).grid(column=1, row=1)
+        self.e1.focus_force()
+        self.root.bind('<Return>', self.submit_player_name)
 
         
-        try:
-            score_file = open("HighScore.txt", "r")
-        except FileNotFoundError:
-            score_file = open("HighScore.txt", "w") #creates the file if it doesn't exist
-            score_file.write(str(game.score))
-            high_score = game.score
-        else:
-            old_score = score_file.read()
-            score_file.close() #close the read version of the file
+    def submit_player_name(self,  *args):
+        self.game.player_name = self.e1.get()
             
-            print("old score: " + old_score)
-            if int(old_score) < game.score:
-                score_file = open("HighScore.txt", "w")
-                high_score = str(game.score)
-                score_file.write(str(game.score))
-            else:
-                high_score = old_score
-                 
-        score_file.close()
+        for child in self.root.winfo_children():
+            child.destroy()
+        self.build_score_display()
         
-        mainframe = ttk.Frame(self.root, padding="3 3 12 12")
+
+    #need args* paramater because its passed by tk for the input types of frames
+    def restart_game(self, *args):
+        try:
+            print("making a new snake")
+            self.root.unbind("<Return>")
+            self.game.restart()
+            self.root.destroy()
+        except ValueError:
+            pass
+    
+    def build_score_display(self):
+        root = self.root
+        
+        mainframe = ttk.Frame(root, padding="3 3 12 12")
         mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
-        
+        root.columnconfigure(0, weight=1)
+        root.rowconfigure(0, weight=1)
         
         restart_button = ttk.Button(mainframe, text="Restart", command=self.restart_game).grid(column=2, row=1)
         quit_button = ttk.Button(mainframe, text="Quit", command=self.quit_game).grid(column=2, row=2)
-        score = ttk.Label(mainframe, text = "Score: " + str(game.score), justify = CENTER).grid(column=2, row=3)
-        #score = ttk.Label(mainframe, text = "High Score: " + str(high_score), justify = CENTER).grid(column=2, row=4)
-        
-        
-        
-        self.save_score(mainframe)
-        
-
-        
-        self.display_score(mainframe)
+        score = ttk.Label(mainframe, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
         
         if self.winner:
             canvas = Canvas(mainframe, width = 300, height = 300)
@@ -70,25 +90,12 @@ class Menu:
         for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
         
         self.root.bind('<Return>', self.restart_game)
-        self.root.mainloop()
-        
-    #need args* paramater because its passed by tk for the input types of frames
-    def restart_game(self, *args):
-        try:
-            print("making a new snake")
-            self.root.unbind("<Return>")
-            self.default_game.restart()
-            self.root.destroy()
-        except ValueError:
-            pass
         
     def quit_game(self):
         sys.exit(0)
         
-    def get_player_name(self):
-         self.default_game.player_name = simpledialog.askstring("Input", "Enter your name", initialvalue=self.default_game.player_name)
 
-     
+        
     def save_score(self, mainframe):
         try:
             server_name = '165.227.51.19' #My server
@@ -98,12 +105,12 @@ class Menu:
             clientSocket.connect((server_name, serverPort))
             
             message_type = "Submit Score"
-            player_name = self.default_game.player_name
+            player_name = self.game.player_name
             game_type = "Default"
             game_version = "1.2"
             extra = "File"
             
-            score_message = message_type + "|" + str(self.default_game.score) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
+            score_message = message_type + "|" + str(self.game.score) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
             print(score_message)
             clientSocket.send(score_message.encode()) #Send score info
             modifiedSentence = clientSocket.recv(1024) #receive reply 
@@ -128,9 +135,9 @@ class Menu:
             self.top_ten = "Error"
             print("Error connecting or communicating to the score database server")
             
-    def display_score(self, mainframe):
-        score = ttk.Label(mainframe, text = "Your Rank: " + str(self.rank), justify = CENTER).grid(column=2, row=4)
-        txt = tkst.ScrolledText(mainframe,width=40,height=10)
+    def display_score(self, frame):
+        score = ttk.Label(frame, text = "Your Rank: " + str(self.rank), justify = CENTER).grid(column=2, row=4)
+        txt = tkst.ScrolledText(frame,width=40,height=10)
         txt.grid(column=2, row=5)
         top_ten = self.top_ten
         top_ten_list = top_ten.split(",", -1)
@@ -140,6 +147,26 @@ class Menu:
             txt.insert(INSERT, str(temp) + ": " + str(i) + "\n")
             temp = temp + 1
     
+    def local_score_save(self, game):
+        try:
+            score_file = open("HighScore.txt", "r")
+        except FileNotFoundError:
+            score_file = open("HighScore.txt", "w") #creates the file if it doesn't exist
+            score_file.write(str(game.score))
+            high_score = game.score
+        else:
+            old_score = score_file.read()
+            score_file.close() #close the read version of the file
+            
+            print("old score: " + old_score)
+            if int(old_score) < game.score:
+                score_file = open("HighScore.txt", "w")
+                high_score = str(game.score)
+                score_file.write(str(game.score))
+            else:
+                high_score = old_score
+                 
+        score_file.close()
 
     def recieve_file(self, s):
         ''' inspired by 
