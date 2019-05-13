@@ -5,7 +5,9 @@ import default_game
 import sys
 import tkinter.scrolledtext as tkst
 from socket import *
-from PIL import ImageTk,Image  
+from PIL import ImageTk,Image
+import threading
+import queue
 
 class Menu: 
     
@@ -24,12 +26,7 @@ class Menu:
         
         #self.local_score_save(game)
         
-        
-       
-        #self.root.after(1000, self.get_player_name)
-
         self.root.mainloop()
-    
     
     def get_player_name(self, root):
         Label(root, text="Name").grid(row=0)
@@ -40,67 +37,72 @@ class Menu:
         self.e1.insert(END, self.game.player_name)
         
         submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
-        submit_name_btn.grid(column=0, row=2)
-        cancel_btn = ttk.Button(root, text="Skip", command=self.restart_game).grid(column=1, row=2)
+        submit_name_btn.grid(column=0, row=2, columnspan=2)
         self.e1.focus_force()
         self.root.bind('<Return>', self.submit_player_name)
 
         
-    def submit_player_name(self,  *args):
-        input = self.e1.get()
-        if(input == "" or ' ' in input or ',' in input): #checks for valid name input
+    def submit_player_name(self, *args):
+        name_input = self.e1.get()
+        if(name_input == "" or ' ' in name_input or ',' in name_input): #checks for valid name name_input
             Label(self.root, text="Name cannot be empty, contain spaces, or contain commas").grid(row=1, columnspan=2)
         else:
-            self.game.player_name = input
+            self.game.player_name = name_input
             for child in self.root.winfo_children():
                 child.destroy()
+            
+            #start saving score in a separate thread
+            self.save_score_thread()
+
             self.build_score_display()
-        
-
-    #need args* paramater because its passed by tk for the input types of frames
-    def restart_game(self, *args):
-        try:
-            print("making a new snake")
-            self.root.unbind("<Return>")
-            self.game.restart()
-            self.root.destroy()
-        except ValueError:
-            pass
     
+    def save_score_thread(self):
+        '''Multi threading inspired by 
+        https://scorython.wordpress.com/2016/06/27/multithreading-with-tkinter/
+        '''
+        self.new_thread = None
+        self.thread_queue = queue.Queue()
+        self.new_thread = threading.Thread(target=self.save_score)
+        self.new_thread.start()
+        self.root.after(100, self.listen_for_result)
+
+    def listen_for_result(self):
+        '''
+        Check if there is something in the queue
+        '''
+        try:
+            self.res = self.thread_queue.get(0)
+            #self.mylabel.config(text='Loop terminated')
+            
+            self.display_rankings(self.root)
+
+            if self.winner:
+                canvas = Canvas(self.root, width = 300, height = 300)
+                canvas.grid(column=2, row=6)
+                img = ImageTk.PhotoImage(Image.open("trophy.png"))
+                canvas.create_image(20,20, anchor=NW, image=img)
+        except queue.Empty:
+            self.root.after(100, self.listen_for_result)
+        
     def build_score_display(self):
-        root = self.root
         
-
+        #mainframe = ttk.Frame(root, padding="3 3 12 12")
+        #mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
         
-        mainframe = ttk.Frame(root, padding="3 3 12 12")
-        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-        root.columnconfigure(0, weight=1)
-        root.rowconfigure(0, weight=1)
+        restart_button = ttk.Button(self.root, text="Restart", command=self.restart_game).grid(column=2, row=1)
+        quit_button = ttk.Button(self.root, text="Quit", command=self.quit_game).grid(column=2, row=2)
+        score = ttk.Label(self.root, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
         
-        restart_button = ttk.Button(mainframe, text="Restart", command=self.restart_game).grid(column=2, row=1)
-        quit_button = ttk.Button(mainframe, text="Quit", command=self.quit_game).grid(column=2, row=2)
-        score = ttk.Label(mainframe, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
         
-        self.save_score(mainframe)
+        self.root.focus_force()
         
-        self.display_score(mainframe)
-
-        if self.winner:
-            canvas = Canvas(mainframe, width = 300, height = 300)
-            canvas.grid(column=2, row=6)
-            img = ImageTk.PhotoImage(Image.open("trophy.png"))
-            canvas.create_image(20,20, anchor=NW, image=img)
-        
-        #mainframe.focus_force()
-        
-        for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
+        for child in self.root.winfo_children(): child.grid_configure(padx=5, pady=5)
         
         self.root.bind('<Return>', self.restart_game)
         
-    def quit_game(self):
-        sys.exit(0)
-        
-    def save_score(self, mainframe):
+    def save_score(self):
         try:
             server_name = '165.227.51.19' #My server
             #server_name = '157.230.131.10' #Micaiah's server
@@ -123,9 +125,8 @@ class Menu:
             #print(arguments)
             print('From Server: ', reply)
             self.rank = arguments[1]
+            self.thread_queue.put(self.rank)
             self.top_ten = arguments[2]
-            
-
             
             if arguments[3] == "True": #The player won the game
                 print("You won, waiting to recieve file")
@@ -139,7 +140,7 @@ class Menu:
             self.top_ten = "Error"
             print("Error connecting or communicating to the score database server")
             
-    def display_score(self, frame):
+    def display_rankings(self, frame):
         score = ttk.Label(frame, text = "Your Rank: " + str(self.rank), justify = CENTER).grid(column=2, row=4)
         txt = tkst.ScrolledText(frame,width=40,height=10)
         txt.grid(column=2, row=5)
@@ -187,8 +188,18 @@ class Menu:
         print('Done receiving')
         return f
 
-    ''' Multi-threading inspired by 
-    https://scorython.wordpress.com/2016/06/27/multithreading-with-tkinter/
-    '''
+    def quit_game(self):
+        sys.exit(0)
+        
+        #need args* paramater because its passed by tk for the input types of frames
+    def restart_game(self, *args):
+        try:
+            print("making a new snake")
+            self.root.unbind("<Return>")
+            self.game.restart()
+            self.root.destroy()
+        except ValueError:
+            pass
+
             
             
