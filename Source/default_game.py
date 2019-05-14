@@ -9,6 +9,7 @@ from snake import Snake
 import snake_food
 import menu
 import pygame
+import copy
 
 SNAKE_SIZE = 20
 
@@ -29,8 +30,13 @@ class Default_Game(Game):
         self.score = 0
         self.player_name = ""
         self.eaten = False
+        #set default for passing through walls
+        self.passthrough = True
+        #set default for crash checker
+        self.crashed = False
+        print(self.passthrough)
         self.start()
-        
+
 
     def update_game(self):
         ''' 
@@ -42,6 +48,7 @@ class Default_Game(Game):
         '''
         if self.game_snake.alive:
             if self.eaten:
+                #if food is eaten, grow
                 self.food.spawn_food(pygame, self.game_snake)
                 self.game_snake.grow(self.direction)
                 self.eaten = False
@@ -50,24 +57,63 @@ class Default_Game(Game):
                 move_sound.set_volume(.05)
                 move_sound.play()
                 self.game_snake.move(self.direction)
+            if self.game_snake.wall_collide(pygame):
+                #MAIN
+                #printing out the x and y coordiantes 
+                if self.passthrough == True:
+                    self.pass_through()
+                else:
+                    print("you crashed")
+                    self.game_snake.die(pygame, self.screen)
+                    self.render()
+                    menu.Menu(self)
+            elif self.game_snake.self_collide():
+                self.game_snake.die(pygame, self.screen)
+                self.render()
+                menu.Menu(self)
+                print("You collided with yourself")
             if self.game_snake.collide(self.food):
+                #colliding with food
                 eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
                 eat_sound.play()
                 self.score = self.score + 100
                 self.eaten = True
-            elif self.game_snake.wall_collide(pygame):
-                self.game_snake.die(pygame, self.screen)
-                self.render()
-                my_menu = menu.Menu(self)
-                print("YOU CRASHED!")
-            elif self.game_snake.self_collide():
-                self.game_snake.die(pygame, self.screen)
-                self.render()
-                my_menu = menu.Menu(self)
-                print("You collided with yourself")
-                #game_snake.move(direction)
+                
         self.direction_lock = False
- 
+
+    def pass_through(self):
+        #number of squares 
+        w, h = pygame.display.get_surface().get_size()
+        tail = self.game_snake.q.popleft()
+        
+        #right side case
+        if self.game_snake.head.x >= w:
+            tail.x = 0
+            tail.y = self.game_snake.head.y 
+            #now set to the passthrough ^^^
+
+        #left side case
+        if self.game_snake.head.x < 0:
+            tail.x = w - tail.size
+            tail.y = self.game_snake.head.y 
+            #now set to the passthrough ^^^
+          
+        #top side case
+        if self.game_snake.head.y < 0:
+            tail.y = h - tail.size
+            tail.x = self.game_snake.head.x
+            #now set to the passthrough ^^^
+       
+        #bottom side case
+        if self.game_snake.head.y >= h:
+            tail.x = self.game_snake.head.x
+            tail.y = 0 
+            #now set to the passthrough ^^^
+      
+        #attach head to tale and the rest will follow
+        self.game_snake.head = copy.copy(tail)
+        self.game_snake.q.append(tail)
+        
     def process_input(self): #Handle inputs and events
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and not self.direction_lock: 
@@ -97,7 +143,7 @@ class Default_Game(Game):
         self.food.render(self.screen, pygame)
         pygame.display.update()
     
-    
+    #create text and place in text box
     def render_score(self):
         basicfont = pygame.font.SysFont(None, 30)
         text = basicfont.render(str(self.score), True, (100, 100, 100), (255, 255, 255))
@@ -113,4 +159,5 @@ class Default_Game(Game):
         self.direction = "east"
         self.score = 0
         self.eaten = False
+
 
