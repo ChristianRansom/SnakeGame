@@ -65,72 +65,56 @@ class Default_Game(Game):
             elif self.game_snake.wall_collide(pygame):
                 #MAIN
                 #printing out the x and y coordiantes 
-                print("XHead:" + str(self.game_snake.head.x))
-                print("YHead:" + str(self.game_snake.head.y))
-                #printing out the if passthrough is on or off(True or False)
-                print("is passthrough on? " + str(self.passthrough))
                 if self.passthrough == True:
-                  #if passthrough is true by the boolean than use the function
-                  self.otherside()
+                    self.pass_through()
                 else:
-                  #if passthrough is false than you hav indeed crashed
-                  #set crashed checker to true
-                  crashed = True
-                  if crashed == True:
                     print("you crashed")
                     self.game_snake.die(pygame, self.screen)
                     self.render()
                     #set crashed to false so that it only states once and stops loop
-                    crashed = False
+                    my_menu = menu.Menu(self)
                 
             elif self.game_snake.self_collide():
                 self.game_snake.die(pygame, self.screen)
                 self.render()
-                #menu was throwing errors when I tested it
-                #my_menu = menu.Menu(self)
+                my_menu = menu.Menu(self)
                 print("You collided with yourself")
-                #game_snake.move(direction)
+
         self.direction_lock = False
 
-    def otherside(self):
+    def pass_through(self):
         #number of squares 
         w, h = pygame.display.get_surface().get_size()
         tail = self.game_snake.q.popleft()
         
         #right side case
         if self.game_snake.head.x >= w:
-          tail.x = 0
-          tail.y = self.game_snake.head.y 
-          #now set to the otherside ^^^
+            tail.x = 0
+            tail.y = self.game_snake.head.y 
+            #now set to the passthrough ^^^
 
         #left side case
         if self.game_snake.head.x < 0:
-          tail.x = w - tail.size
-          tail.y = self.game_snake.head.y 
-          #now set to the otherside ^^^
+            tail.x = w - tail.size
+            tail.y = self.game_snake.head.y 
+            #now set to the passthrough ^^^
           
         #top side case
         if self.game_snake.head.y < 0:
-          tail.y = h - tail.size
-          tail.x = self.game_snake.head.x
-          #now set to the otherside ^^^
+            tail.y = h - tail.size
+            tail.x = self.game_snake.head.x
+            #now set to the passthrough ^^^
        
         #bottom side case
         if self.game_snake.head.y >= h:
-          tail.x = self.game_snake.head.x
-          tail.y = 0 
-          #now set to the otherside ^^^
+            tail.x = self.game_snake.head.x
+            tail.y = 0 
+            #now set to the passthrough ^^^
       
         #attach head to tale and the rest will follow
         self.game_snake.head = copy.copy(tail)
         self.game_snake.q.append(tail)
         
-       
-
-        
-
-
-
     def process_input(self): #Handle inputs and events
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and not self.direction_lock: 
