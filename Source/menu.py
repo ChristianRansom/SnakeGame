@@ -139,7 +139,7 @@ class Menu:
             
     def display_rankings(self, frame):
         #Displays the results from the server about score ranking and info
-        self.loading_label.config(text=str(self.rank))
+        self.loading_label.config(text= "Rank: " + str(self.rank))
         txt = tkst.ScrolledText(frame,width=40,height=10)
         txt.grid(column=2, row=5)
         top_ten = self.top_ten
