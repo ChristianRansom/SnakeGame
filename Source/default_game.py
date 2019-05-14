@@ -56,13 +56,7 @@ class Default_Game(Game):
                 move_sound.set_volume(.05)
                 move_sound.play()
                 self.game_snake.move(self.direction)
-            if self.game_snake.collide(self.food):
-                #colliding with food
-                eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
-                eat_sound.play()
-                self.score = self.score + 100
-                self.eaten = True
-            elif self.game_snake.wall_collide(pygame):
+            if self.game_snake.wall_collide(pygame):
                 #MAIN
                 #printing out the x and y coordiantes 
                 if self.passthrough == True:
@@ -71,15 +65,19 @@ class Default_Game(Game):
                     print("you crashed")
                     self.game_snake.die(pygame, self.screen)
                     self.render()
-                    #set crashed to false so that it only states once and stops loop
-                    my_menu = menu.Menu(self)
-                
+                    menu.Menu(self)
             elif self.game_snake.self_collide():
                 self.game_snake.die(pygame, self.screen)
                 self.render()
-                my_menu = menu.Menu(self)
+                menu.Menu(self)
                 print("You collided with yourself")
-
+            if self.game_snake.collide(self.food):
+                #colliding with food
+                eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
+                eat_sound.play()
+                self.score = self.score + 100
+                self.eaten = True
+                
         self.direction_lock = False
 
     def pass_through(self):
