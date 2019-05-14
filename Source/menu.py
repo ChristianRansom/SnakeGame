@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import ttk, simpledialog
-import snake
 import default_game
-import sys
 import tkinter.scrolledtext as tkst
 from socket import *
 from PIL import ImageTk,Image
@@ -13,22 +11,18 @@ class Menu:
     
     def __init__(self, game):
     
-        self.root = Tk()
+        self.root = Tk() #Could swap this to a frame or something
         self.game = game
         self.winner = False
         
         self.root.title("Snake")
         
-        #self.build_score_display(self.root)
-        
         self.get_player_name(self.root)
-        #self.end_screen(self.root)
-        
-        #self.local_score_save(game)
         
         self.root.mainloop()
     
     def get_player_name(self, root):
+        #A gui for the user to input their name before the score is saved and rank displayed
         Label(root, text="Name").grid(row=0)
         
         self.e1 = Entry(root)
@@ -41,8 +35,9 @@ class Menu:
         self.e1.focus_force()
         self.root.bind('<Return>', self.submit_player_name)
 
-        
+    #need args* paramater because its passed by tk for the input types of frames
     def submit_player_name(self, *args):
+        #submits the player name to save the score and display ranking info
         name_input = self.e1.get()
         if(name_input == "" or ' ' in name_input or ',' in name_input): #checks for valid name name_input
             Label(self.root, text="Name cannot be empty, contain spaces, or contain commas").grid(row=1, columnspan=2)
@@ -51,8 +46,7 @@ class Menu:
             for child in self.root.winfo_children():
                 child.destroy()
             
-            #start saving score in a separate thread
-            self.save_score_thread()
+            self.save_score_thread() #start saving score in a separate thread
 
             self.build_score_display()
     
@@ -82,19 +76,21 @@ class Menu:
                 img = ImageTk.PhotoImage(Image.open("trophy.png"))
                 canvas.create_image(20,20, anchor=NW, image=img)
         except queue.Empty:
-            self.root.after(100, self.listen_for_result)
+            #Continues to check if the save_score thread is finished
+            self.root.after(100, self.listen_for_result) 
+            
         
     def build_score_display(self):
+        #Displays the main end screen buttons and information 
         
-        #mainframe = ttk.Frame(root, padding="3 3 12 12")
-        #mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         
-        restart_button = ttk.Button(self.root, text="Restart", command=self.restart_game).grid(column=2, row=1)
-        quit_button = ttk.Button(self.root, text="Quit", command=self.quit_game).grid(column=2, row=2)
-        score = ttk.Label(self.root, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
-        
+        ttk.Button(self.root, text="Restart", command=self.restart_game).grid(column=2, row=1)
+        ttk.Button(self.root, text="Quit", command=self.quit_game).grid(column=2, row=2)
+        ttk.Label(self.root, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
+        self.loading_label = ttk.Label(self.root, text = "Loading Rankings: ", justify = CENTER)
+        self.loading_label.grid(column=2, row=4)
         
         self.root.focus_force()
         
@@ -136,12 +132,14 @@ class Menu:
             
             clientSocket.close()
         except ConnectionRefusedError:
-            self.rank = "Error"
+            self.rank = "Error connecting to database"
             self.top_ten = "Error"
+            self.thread_queue.put("Error")
             print("Error connecting or communicating to the score database server")
             
     def display_rankings(self, frame):
-        score = ttk.Label(frame, text = "Your Rank: " + str(self.rank), justify = CENTER).grid(column=2, row=4)
+        #Displays the results from the server about score ranking and info
+        self.loading_label.config(text=str(self.rank))
         txt = tkst.ScrolledText(frame,width=40,height=10)
         txt.grid(column=2, row=5)
         top_ten = self.top_ten
@@ -191,7 +189,7 @@ class Menu:
     def quit_game(self):
         sys.exit(0)
         
-        #need args* paramater because its passed by tk for the input types of frames
+    #need args* paramater because its passed by tk for the input types of frames
     def restart_game(self, *args):
         try:
             print("making a new snake")
