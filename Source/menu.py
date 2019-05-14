@@ -89,7 +89,7 @@ class Menu:
         ttk.Button(self.root, text="Restart", command=self.restart_game).grid(column=2, row=1)
         ttk.Button(self.root, text="Quit", command=self.quit_game).grid(column=2, row=2)
         ttk.Label(self.root, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
-        self.loading_label = ttk.Label(self.root, text = "Loading Rankings: ", justify = CENTER)
+        self.loading_label = ttk.Label(self.root, text = "Loading Rankings... ", justify = CENTER)
         self.loading_label.grid(column=2, row=4)
         
         self.root.focus_force()

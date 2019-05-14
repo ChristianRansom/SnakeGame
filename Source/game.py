@@ -15,11 +15,15 @@ class Game(object):
         '''
         Constructor
         '''
-        # initialize the pygame module and sound
+        
+        
+        #initialize the pygame module and sound
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.mixer.init()
         pygame.init()
-            
+        logo = pygame.image.load("SnakeIcon.jpg")
+        pygame.display.set_icon(logo)
+        pygame.display.set_caption("SNAKE")
         self.screen = pygame.display.set_mode((240,240))
         self.running = True
         white = (255,255,255)
