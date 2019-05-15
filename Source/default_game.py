@@ -82,8 +82,8 @@ class Default_Game(Game):
         #number of squares 
         w, h = pygame.display.get_surface().get_size()
         tail = self.game_snake.q.popleft()
-        print("x " + str(self.game_snake.head.x))
-        print("y " + str(self.game_snake.head.y))
+        #print("x " + str(self.game_snake.head.x))
+        #print("y " + str(self.game_snake.head.y))
         #right side case
         if self.game_snake.head.x >= GRID_SIZE:
             tail.x = 0

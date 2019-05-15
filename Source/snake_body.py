@@ -4,6 +4,7 @@ Created on Jan 29, 2019
 @author: Christian Ransom
 '''
 from game_object import GameObject
+import game
 
 
 class SnakeBody(GameObject):
@@ -23,7 +24,7 @@ class SnakeBody(GameObject):
         #Tile size is how big the squares are on the screen grid
         #self.size Allows a body to render bigger or smaller than a tile size
         #self x and y refer to which tile, not the pixel
-        pygame.draw.rect(screen, color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), 3)
+        pygame.draw.rect(screen, color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
 
     
         

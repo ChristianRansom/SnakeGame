@@ -22,7 +22,7 @@ class SnakeFood(GameObject):
         self.food_color = (0,0,0)
     
     def render(self, screen, pygame, tile_height, tile_width):
-        pygame.draw.rect(screen, self.food_color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), 3)
+        pygame.draw.rect(screen, self.food_color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
 
     #This method doesn't create a new food. It just moves this food to a new random location 
     def spawn_food(self, pygame, snake, tile_height, tile_width):
