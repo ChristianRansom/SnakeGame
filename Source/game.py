@@ -29,7 +29,7 @@ class Game(object):
         logo = pygame.image.load("SnakeIcon.jpg")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("SNAKE")
-        self.screen = pygame.display.set_mode((240,240), RESIZABLE)
+        self.screen = pygame.display.set_mode((480,480), RESIZABLE)
         self.running = True
         white = (255,255,255)
         self.screen.fill(white)

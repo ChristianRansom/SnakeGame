@@ -108,8 +108,8 @@ class Menu:
             
             message_type = "Submit Score"
             player_name = self.game.player_name
-            game_type = "Default"
-            game_version = "1.2"
+            game_type = "testing"
+            game_version = "1.5"
             extra = "File"
             
             score_message = message_type + "|" + str(self.game.score) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
