@@ -48,7 +48,8 @@ class Default_Game(Game):
         if self.game_snake.alive:
             if self.eaten:
                 #if food is eaten, grow
-                self.food.spawn_food(pygame, self.game_snake, self.tile_height, self.tile_width)
+                self.food.spawn_food(pygame, self.game_snake)
+                self.food.age = 0
                 self.game_snake.grow(self.direction)
                 self.eaten = False
             else:  
@@ -56,6 +57,7 @@ class Default_Game(Game):
                 move_sound.set_volume(.05)
                 move_sound.play()
                 self.game_snake.move(self.direction)
+                self.food.age = self.food.age + 1
             if self.game_snake.wall_collide(pygame):
                 if self.passthrough == True:
                     self.pass_through()
