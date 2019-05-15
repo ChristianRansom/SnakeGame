@@ -3,7 +3,7 @@ Created on Feb 4, 2019
 
 @author: Christian Ransom
 '''
-from game import Game
+from game import Game, GRID_SIZE
 import snake
 from snake import Snake
 import snake_food
@@ -34,7 +34,6 @@ class Default_Game(Game):
         self.passthrough = True
         #set default for crash checker
         self.crashed = False
-        print(self.passthrough)
         self.start()
 
 
@@ -58,8 +57,6 @@ class Default_Game(Game):
                 move_sound.play()
                 self.game_snake.move(self.direction)
             if self.game_snake.wall_collide(pygame):
-                #MAIN
-                #printing out the x and y coordiantes 
                 if self.passthrough == True:
                     self.pass_through()
                 else:
@@ -85,27 +82,28 @@ class Default_Game(Game):
         #number of squares 
         w, h = pygame.display.get_surface().get_size()
         tail = self.game_snake.q.popleft()
-        
+        print("x " + str(self.game_snake.head.x))
+        print("y " + str(self.game_snake.head.y))
         #right side case
-        if self.game_snake.head.x >= w:
+        if self.game_snake.head.x >= GRID_SIZE:
             tail.x = 0
             tail.y = self.game_snake.head.y 
             #now set to the passthrough ^^^
 
         #left side case
         if self.game_snake.head.x < 0:
-            tail.x = w - tail.size
+            tail.x = GRID_SIZE - 1
             tail.y = self.game_snake.head.y 
             #now set to the passthrough ^^^
           
         #top side case
         if self.game_snake.head.y < 0:
-            tail.y = h - tail.size
+            tail.y = GRID_SIZE - 1
             tail.x = self.game_snake.head.x
             #now set to the passthrough ^^^
        
         #bottom side case
-        if self.game_snake.head.y >= h:
+        if self.game_snake.head.y >= GRID_SIZE:
             tail.x = self.game_snake.head.x
             tail.y = 0 
             #now set to the passthrough ^^^

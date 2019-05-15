@@ -6,6 +6,7 @@ Created on Feb 1, 2019
 from collections import deque
 from game_object import GameObject
 import snake_body
+import game
 import copy
 
 class Snake():
@@ -29,8 +30,7 @@ class Snake():
         return GameObject.collide(self.head, other)
     
     def wall_collide(self, pygame):
-        w, h = pygame.display.get_surface().get_size()
-        return not (self.head.x >= 0 and self.head.y >= 0 and self.head.x < h and self.head.y < w)
+        return not (self.head.x >= 0 and self.head.y >= 0 and self.head.x < game.GRID_SIZE and self.head.y < game.GRID_SIZE)
 
     def self_collide(self):
         #print("================check self collision================")
