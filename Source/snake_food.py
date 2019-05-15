@@ -6,30 +6,31 @@ Created on Jan 31, 2019
 from game_object import GameObject
 import snake_body
 import random 
+import game
 
 class SnakeFood(GameObject):
     '''
     classdocs
     '''
 
-    def __init__(self, pygame, size, a_snake, x_value = -1000, y_value = -1000):
+    def __init__(self, pygame, size, a_snake, tile_height, tile_width, x_value = -1000, y_value = -1000):
         '''
         Constructor
         '''
         super().__init__(x_value, y_value, size)
-        self.spawn_food(pygame, a_snake)
+        self.spawn_food(pygame, a_snake, tile_height, tile_width)
         self.food_color = (0,0,0)
     
-    def render(self, screen, pygame):
-        pygame.draw.rect(screen, self.food_color, (self.x, self.y, self.size, self.size), 3)
-        
+    def render(self, screen, pygame, tile_height, tile_width):
+        pygame.draw.rect(screen, self.food_color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), 3)
+
     #This method doesn't create a new food. It just moves this food to a new random location 
-    def spawn_food(self, pygame, snake):
+    def spawn_food(self, pygame, snake, tile_height, tile_width):
         success = False
-        w, h = pygame.display.get_surface().get_size()
+        #w, h = pygame.display.get_surface().get_size()
         while not success: #Keep trying to spawn new food until a free spot is found
-            self.x = random.randrange(0, h - self.size, self.size)
-            self.y = random.randrange(0, w - self.size, self.size)
+            self.x = random.randrange(0, game.GRID_SIZE, 1)
+            self.y = random.randrange(0, game.GRID_SIZE, 1)
             success = True
             for body in snake.q:
             #print("body location")

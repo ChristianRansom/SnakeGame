@@ -5,6 +5,9 @@ Created on Feb 4, 2019
 '''
 from abc import ABC, abstractmethod
 import pygame
+from pygame.constants import RESIZABLE
+
+GRID_SIZE = 12
 
 class Game(object):
     '''
@@ -26,13 +29,17 @@ class Game(object):
         logo = pygame.image.load("SnakeIcon.jpg")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("SNAKE")
-        self.screen = pygame.display.set_mode((240,240))
+        self.screen = pygame.display.set_mode((240,240), RESIZABLE)
         self.running = True
         white = (255,255,255)
         self.screen.fill(white)
         #pygame.draw.rect(screen, (0,0,0), (10,10,10,10), 3)
         pygame.display.update()
         self.clock = pygame.time.Clock()
+        
+        self.tile_height = 20
+        self.tile_width = 20
+        self.calc_tile_size()
         
         
     def start(self):
@@ -60,3 +67,12 @@ class Game(object):
     @abstractmethod
     def render(self):
         pass
+    
+    def calc_tile_size(self):
+        #Calcualtes the maximum size for the tiles 
+        h, w = pygame.display.get_surface().get_size()
+        
+        self.tile_height = h // GRID_SIZE
+        self.tile_width = w // GRID_SIZE
+        
+        

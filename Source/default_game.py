@@ -11,7 +11,7 @@ import menu
 import pygame
 import copy
 
-SNAKE_SIZE = 20
+SNAKE_SIZE = 1
 
 class Default_Game(Game):
     '''
@@ -24,7 +24,7 @@ class Default_Game(Game):
         '''
         super().__init__()
         self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
-        self.food = snake_food.SnakeFood(pygame, SNAKE_SIZE, self.game_snake)
+        self.food = snake_food.SnakeFood(pygame, SNAKE_SIZE, self.game_snake, self.tile_height, self.tile_width)
         self.direction_lock = False
         self.direction = "east"
         self.score = 0
@@ -49,7 +49,7 @@ class Default_Game(Game):
         if self.game_snake.alive:
             if self.eaten:
                 #if food is eaten, grow
-                self.food.spawn_food(pygame, self.game_snake)
+                self.food.spawn_food(pygame, self.game_snake, self.tile_height, self.tile_width)
                 self.game_snake.grow(self.direction)
                 self.eaten = False
             else:  
@@ -129,6 +129,11 @@ class Default_Game(Game):
                 elif event.key == pygame.K_UP and self.direction != "south":
                     self.direction_lock = True  
                     self.direction = "north"
+            if event.type == pygame.VIDEORESIZE:
+                self.screen = pygame.display.set_mode((event.w, event.h),
+                                              pygame.RESIZABLE)
+                self.calc_tile_size()
+            
                     
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT:
@@ -139,8 +144,8 @@ class Default_Game(Game):
         white = (255,255,255)
         self.screen.fill(white)
         self.render_score()
-        self.game_snake.render(self.screen, pygame)
-        self.food.render(self.screen, pygame)
+        self.game_snake.render(self.screen, pygame, self.tile_height, self.tile_width)
+        self.food.render(self.screen, pygame, self.tile_height, self.tile_width)
         pygame.display.update()
     
     #create text and place in text box

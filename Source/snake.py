@@ -13,7 +13,7 @@ class Snake():
     classdocs
     '''
     
-    def __init__(self, body_length = 0, size = 20, x_value = 0, y_value = 0, direction = "east"):
+    def __init__(self, body_length = 0, size = 1, x_value = 0, y_value = 0, direction = "east"):
         '''
         Constructor
         '''
@@ -61,6 +61,7 @@ class Snake():
     
     def move(self, direction):
         tail = self.q.popleft()
+        move_amount = 1 #It moves 1 tile at a time
         #print("head x " + str(head.x()))
         #print("head y " + str(head.y()))
         #print("tail x " + str(tail.x()))
@@ -68,22 +69,22 @@ class Snake():
         
         #Decide the direction of movement
         if direction == "east":
-            tail.x = self.head.x + tail.size
+            tail.x = self.head.x + move_amount
             tail.y = self.head.y
         elif direction == "west":
-            tail.x = self.head.x - tail.size
+            tail.x = self.head.x - move_amount
             tail.y = self.head.y
         elif direction == "north":
-            tail.y = self.head.y - tail.size
+            tail.y = self.head.y - move_amount
             tail.x = self.head.x
         elif direction == "south":
-            tail.y = self.head.y + tail.size
+            tail.y = self.head.y + move_amount
             tail.x = self.head.x
             
         self.head = copy.copy(tail)
         self.q.append(tail)
         
-    def render(self, screen, pygame):
+    def render(self, screen, pygame, tile_height, tile_width):
         for body in self.q:
-            body.render(screen, pygame, self.color)
+            body.render(screen, pygame, self.color, tile_height, tile_width)
             
