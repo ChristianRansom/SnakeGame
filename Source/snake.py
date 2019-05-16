@@ -19,9 +19,9 @@ class Snake():
         Constructor
         '''
         self.q = deque()
-        self.color = (0,128,0) #Green
         self.head_color = (10,60,10)
         self.alive = True
+        self.jumped = False
         
         self.head = snake_body.SnakeBody(size, x_value, y_value)
         for _ in range(body_length):
@@ -81,12 +81,22 @@ class Snake():
         elif direction == "south":
             tail.y = self.head.y + move_amount
             tail.x = self.head.x
-            
-        self.head = copy.copy(tail)
-        self.q.append(tail)
         
+        self.q.append(tail)
+        self.head = tail
+        self.head.color = (0,128,0) #green
+
     def render(self, screen, pygame, tile_height, tile_width):
+        jump_color = (0, 0, 255)
+        if self.jumped:
+            self.head.color = jump_color
         for body in self.q:
-            body.render(screen, pygame, self.color, tile_height, tile_width)
-        self.head.render(screen, pygame, self.head_color, tile_height, tile_width)
+            body.render(screen, pygame, body.color, tile_height, tile_width)
+        if not self.jumped:
+            self.head.render(screen, pygame, self.head_color, tile_height, tile_width)
             
+        
+
+
+        #Render the head a different color
+
