@@ -11,7 +11,11 @@ class GameObject:
         self.y = y_value
         self.size = a_size
         self.color = (0, 0, 0)
+        self.collider = True
     
     def collide(self, other):
-        return (self.x == other.x and self.y == other.y)
+        if self.collider and other.collider:
+            return (self.x == other.x and self.y == other.y)
+        else:
+            return False
             

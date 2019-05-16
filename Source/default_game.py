@@ -12,6 +12,7 @@ import pygame
 import copy
 
 SNAKE_SIZE = 1
+GAME_VERSION = 1.6
 
 class Default_Game(Game):
     '''
@@ -126,6 +127,7 @@ class Default_Game(Game):
                 elif event.key == pygame.K_SPACE:
                     #Change color of snakebody that was jumped on
                     self.game_snake.jumped = True
+                    #self.game_snake.head.collider = False
             if event.type == pygame.VIDEORESIZE:
                 self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 self.calc_tile_size()

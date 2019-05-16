@@ -85,11 +85,16 @@ class Snake():
         self.q.append(tail)
         self.head = tail
         self.head.color = (0,128,0) #green
+        if self.jumped:
+            self.head.collider = False
+        else:
+            self.head.collider = True
 
     def render(self, screen, pygame, tile_height, tile_width):
         jump_color = (0, 0, 255)
         if self.jumped:
             self.head.color = jump_color
+            self.head.collider = False
         for body in self.q:
             body.render(screen, pygame, body.color, tile_height, tile_width)
         if not self.jumped:
