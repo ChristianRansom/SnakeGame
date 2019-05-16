@@ -11,7 +11,7 @@ MAX_POINTS = 200 #Max points that can be gotten
 MIN_POINTS = 50 #Minimum of points after the full decay time has happened
 DECAY_START = 20 #The average amount of decay that should happen each move 
 DECAY_FACTOR = .5 #How much higher does the score decrement start as a factor of the decay base
-GRACE_PERIOD = 5 #number of moves before food starts to decay
+GRACE_PERIOD = 8 #number of moves before food starts to decay
 
 class SnakeFood(GameObject):
 
@@ -25,6 +25,11 @@ class SnakeFood(GameObject):
         self.age = 0
         self.score = MAX_POINTS
         self.score_decrement = DECAY_START
+        self.eaten = False 
+        self.score_animation_life = 0
+        self.animation_score = 0
+        self.animation_x = 0
+        self.animation_y = 0
         #Store in a variable so we do not have to recalculate each time
         #Spread the color change over the decay time
         self.color_change = 255 // (DECAY_START * DECAY_FACTOR)
@@ -45,7 +50,17 @@ class SnakeFood(GameObject):
                 self.score = MIN_POINTS
             if self.score_decrement - DECAY_FACTOR > 0:
                 self.score_decrement = self.score_decrement - DECAY_FACTOR
-            
+        
+        if self.eaten:
+            self.score_animation_life = 10
+            self.animation_score = self.score
+            self.animation_x = self.x
+            self.animation_y = self.y
+        
+        if self.score_animation_life > 0:    
+            self.render_food_points(screen, pygame, tile_height, tile_width)
+            self.score_animation_life = self.score_animation_life - 1
+        
         pygame.draw.rect(screen, self.food_color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
      
     def spawn_food(self, pygame, snake):
@@ -66,6 +81,17 @@ class SnakeFood(GameObject):
         self.score = MAX_POINTS
         self.score_decrement = DECAY_START
         
+    def render_food_points(self, screen, pygame, tile_height, tile_width):
+        basicfont = pygame.font.SysFont(None, 30)
+        score_color = (255, 255, 255)
+        if self.animation_score == 200:
+            score_color = (255, 255, 0)
+        text = basicfont.render(str(self.animation_score), True, (100, 100, 100), score_color)
+        text_rect = text.get_rect()
+        
+        text_rect.x = self.animation_x * tile_height
+        text_rect.y = self.animation_y * tile_width
+        screen.blit(text, text_rect)
         
         
         

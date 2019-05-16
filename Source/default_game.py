@@ -46,12 +46,12 @@ class Default_Game(Game):
                 
         '''
         if self.game_snake.alive:
-            if self.eaten:
+            if self.food.eaten:
                 #if food is eaten, grow
                 self.food.spawn_food(pygame, self.game_snake)
                 self.food.age = 0
                 self.game_snake.grow(self.direction)
-                self.eaten = False
+                self.food.eaten = False
             else:  
                 move_sound = pygame.mixer.Sound("103336__fawfulgrox__low-bloop.wav")
                 move_sound.set_volume(.05)
@@ -76,7 +76,7 @@ class Default_Game(Game):
                 eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
                 eat_sound.play()
                 self.score = int(self.score + self.food.score)
-                self.eaten = True
+                self.food.eaten = True
                 
         self.direction_lock = False
 
