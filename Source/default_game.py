@@ -77,7 +77,7 @@ class Default_Game(Game):
                 eat_sound.play()
                 self.score = int(self.score + self.food.score)
                 self.food.eaten = True
-                
+        self.food.update()
         self.direction_lock = False
 
     def pass_through(self):

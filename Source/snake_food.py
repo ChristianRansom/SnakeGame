@@ -33,23 +33,28 @@ class SnakeFood(GameObject):
         #Store in a variable so we do not have to recalculate each time
         #Spread the color change over the decay time
         self.color_change = 255 // (DECAY_START * DECAY_FACTOR)
-        
-
-    def render(self, screen, pygame, tile_height, tile_width):
-        print("decrement: " + str(self.score_decrement))
-        print("SCORE: " + str(self.score))
-        #print("Score decay decrement: " + str(self.score_decrement_decay))
-        #print("DECAY_FACTOR: " + str(DECAY_FACTOR))
+    
+    
+    def update(self):
         if self.age > GRACE_PERIOD:
             if self.score - self.score_decrement >= MIN_POINTS: 
                 self.score = self.score - self.score_decrement
-                if self.food_color[0] + self.color_change < 255: #Max color change
-                    color_change = self.food_color[0] + self.color_change
-                    self.food_color = (color_change, color_change, 0)
             else:
                 self.score = MIN_POINTS
             if self.score_decrement - DECAY_FACTOR > 0:
                 self.score_decrement = self.score_decrement - DECAY_FACTOR
+                
+        if self.eaten:
+            self.score_animation_life = 10
+            self.animation_score = self.score
+            self.animation_x = self.x
+            self.animation_y = self.y
+
+    def render(self, screen, pygame, tile_height, tile_width):
+        if self.age > GRACE_PERIOD and self.score - self.score_decrement >= MIN_POINTS:
+            if self.food_color[0] + self.color_change < 255: #Max color change
+                color_change = self.food_color[0] + self.color_change
+                self.food_color = (color_change, color_change, 0)
         
         if self.eaten:
             self.score_animation_life = 10
@@ -86,7 +91,7 @@ class SnakeFood(GameObject):
         score_color = (255, 255, 255)
         if self.animation_score == 200:
             score_color = (255, 255, 0)
-        text = basicfont.render(str(self.animation_score), True, (100, 100, 100), score_color)
+        text = basicfont.render(str(int(self.animation_score)), True, (100, 100, 100), score_color)
         text_rect = text.get_rect()
         
         text_rect.x = self.animation_x * tile_height
