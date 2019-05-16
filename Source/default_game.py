@@ -75,7 +75,7 @@ class Default_Game(Game):
                 #colliding with food
                 eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
                 eat_sound.play()
-                self.score = self.score + self.food.score
+                self.score = int(self.score + self.food.score)
                 self.eaten = True
                 
         self.direction_lock = False
