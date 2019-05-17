@@ -20,6 +20,7 @@ class Snake():
         '''
         self.q = deque()
         self.color = (0,128,0) #Green
+        self.head_color = (10,60,10)
         self.alive = True
         
         self.head = snake_body.SnakeBody(size, x_value, y_value)
@@ -87,4 +88,5 @@ class Snake():
     def render(self, screen, pygame, tile_height, tile_width):
         for body in self.q:
             body.render(screen, pygame, self.color, tile_height, tile_width)
+        self.head.render(screen, pygame, self.head_color, tile_height, tile_width)
             
