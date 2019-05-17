@@ -12,6 +12,7 @@ import pygame
 import copy
 
 SNAKE_SIZE = 1
+GAME_VERSION = 1.6
 
 class Default_Game(Game):
 
@@ -36,6 +37,7 @@ class Default_Game(Game):
         if self.game_snake.alive:
             if self.food.eaten:
                 #if food is eaten, grow
+                #if food is eaten, grow. This happens on the move after the food is first collided with
                 self.food.spawn_food(pygame, self.game_snake)
                 self.food.age = 0
                 self.game_snake.grow(self.direction)
@@ -65,8 +67,8 @@ class Default_Game(Game):
                 eat_sound.play()
                 self.score = int(self.score + self.food.score)
                 self.food.eaten = True
-        self.food.update()
-        self.direction_lock = False
+            self.food.update()
+            self.direction_lock = False
 
     def pass_through(self):
         #number of squares 
@@ -103,6 +105,7 @@ class Default_Game(Game):
         self.game_snake.q.append(tail)
         
     def process_input(self): #Handle inputs and events
+        self.game_snake.jumped = False
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and not self.direction_lock: 
                 if event.key == pygame.K_LEFT and self.direction != "east":
@@ -117,9 +120,12 @@ class Default_Game(Game):
                 elif event.key == pygame.K_UP and self.direction != "south":
                     self.direction_lock = True  
                     self.direction = "north"
+                elif event.key == pygame.K_SPACE:
+                    #Change color of snakebody that was jumped on
+                    self.game_snake.jumped = True
+                    #self.game_snake.head.collider = False
             if event.type == pygame.VIDEORESIZE:
-                self.screen = pygame.display.set_mode((event.w, event.h),
-                                              pygame.RESIZABLE)
+                self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 self.calc_tile_size()
             
                     

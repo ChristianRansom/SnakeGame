@@ -18,6 +18,7 @@ class SnakeBody(GameObject):
         Constructor
         '''
         super().__init__(x_value, y_value, size)
+        self.color = (0,128,0) #Green
     
     
     def render(self, screen, pygame, color, tile_height, tile_width):
