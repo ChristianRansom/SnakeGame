@@ -14,14 +14,8 @@ import copy
 SNAKE_SIZE = 1
 
 class Default_Game(Game):
-    '''
-    classdocs
-    '''
 
     def __init__(self):
-        '''
-        Constructor
-        '''
         super().__init__()
         self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
         self.food = snake_food.SnakeFood(pygame, SNAKE_SIZE, self.game_snake, self.tile_height, self.tile_width)
@@ -38,13 +32,7 @@ class Default_Game(Game):
 
 
     def update_game(self):
-        ''' 
-        if food eaten then handle food eaten
-            place new snake_body at next move direction
-        else
-            move tail to next move direction 
-                
-        '''
+        
         if self.game_snake.alive:
             if self.eaten:
                 #if food is eaten, grow
@@ -157,10 +145,9 @@ class Default_Game(Game):
         
     def restart(self):
         self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
-        self.food.spawn_food(pygame, self.game_snake)
+        self.food.spawn_food(pygame, self.game_snake, self.tile_height, self.tile_width)
         self.direction_lock = False
         self.direction = "east"
         self.score = 0
         self.eaten = False
-
 
