@@ -6,6 +6,42 @@ from socket import *
 from PIL import ImageTk,Image
 import threading
 import queue
+import pygame
+import thorpy
+
+
+class New_Menu():
+    
+    def __init__(self):
+        pygame.key.set_repeat(300, 30)
+        clock = pygame.time.Clock()
+        screen = pygame.display.set_mode((240,240))
+        screen.fill((255,255,255))
+        
+        
+        
+        #Create buttons and place them in a box
+        play_button = thorpy.make_button("Play", func=thorpy.functions.quit_func)
+        #options_button = thorpy.make_button("Difficulty", func=thorpy.functions.quit_func)
+        quit_button = thorpy.make_button("Quit", func=self.quit_function)
+        box = thorpy.Box(elements=[play_button, quit_button])
+        menu = thorpy.Menu(box)
+        for element in menu.get_population():
+            element.surface = screen
+        box.set_center((120,120))
+        box.blit()
+        box.update()
+    
+        #Menu loop
+        menu_start = True
+        while menu_start == True:
+            #pygame.init()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    menu_start = False
+                    break
+                menu.react(event)
+
 
 class Menu: 
     
