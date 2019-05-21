@@ -25,7 +25,7 @@ class Menu():
         
     def create_gui(self, screen):
         #Create buttons and place them in a box
-        play_button = thorpy.make_button("Play", func=self.restart_game, params={'screen':screen})
+        play_button = thorpy.make_button("Play", func=self.restart_game)
         quit_button = thorpy.make_button("Quit", func=self.quit_game)
         box = thorpy.Box([play_button, quit_button])
         self.elements.append(box)
@@ -47,17 +47,16 @@ class Menu():
                 self.menu.react(event) #Handles function binding to buttons and gui elements
                 if event.type == pygame.QUIT:
                     self.quit_game()
+        self.finish(screen)
         
-        #self.menu.functions.quit_menu_func()
-        print("ending menu")
-
-        if self.restart:
-            self.restart_game(screen)
+    def finish(self, screen):
+        if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
+            return default_game.Default_Game(screen)
     
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
-                self.restart = True
+                self.restart_game()
     
     def render(self, screen, menu):        
         white = (255,255,255)
@@ -71,11 +70,10 @@ class Menu():
 
         pygame.display.update()
         
-    def restart_game(self, screen):
-        print("turning off menu loop")
+    def restart_game(self):
+        self.restart = True
         self.running = False
-        default_game.Default_Game(screen)
-
+            
     def quit_game(self):
         self.running = False
         
