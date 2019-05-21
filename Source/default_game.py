@@ -15,8 +15,8 @@ GAME_VERSION = 1.6
 
 class Default_Game(Game):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, screen):
+        super(Default_Game, self).__init__(screen)
         self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
         self.food = snake_food.SnakeFood(SNAKE_SIZE, self.game_snake, self.tile_height, self.tile_width)
         self.player_name = ""
@@ -28,7 +28,7 @@ class Default_Game(Game):
         self.start()
 
     def restart(self):
-        self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
+        self.game_snake = snake.Snake(6, SNAKE_SIZE, 0, 0)
         self.food.spawn_food(self.game_snake)
         self.score = 0
         self.direction_lock = False
@@ -59,7 +59,6 @@ class Default_Game(Game):
             if event.type == pygame.VIDEORESIZE: #handle the window resizing
                 self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 self.calc_tile_size()
-                    
             if event.type == pygame.QUIT:
                 self.running = False
                 
@@ -85,15 +84,9 @@ class Default_Game(Game):
             if self.passthrough == True:
                 self.pass_through()
             else:
-                print("you crashed")
-                self.game_snake.die(self.screen, self.tile_height, self.tile_width)
-                self.render()
-                menu.Menu(self)
+                self.game_over()
         elif self.game_snake.self_collide():
-            self.game_snake.die(self.screen, self.tile_height, self.tile_width)
-            self.render()
-            menu.Menu(self)
-            print("You collided with yourself")
+            self.game_over()
         if self.game_snake.collide(self.food):
             #colliding with food
             eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
@@ -101,6 +94,12 @@ class Default_Game(Game):
             self.score += int(self.food.score)
             self.food.eaten = True
             
+    def game_over(self):
+        self.game_snake.die()
+        self.render()
+        self.running = False
+        print("You crashed")
+    
     def pass_through(self):
         tail = self.game_snake.q.popleft()
         #print("x " + str(self.game_snake.head.x))

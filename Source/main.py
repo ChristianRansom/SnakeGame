@@ -18,7 +18,7 @@ def main():
     
     screen = pygame.display.set_mode((DEFAULT_SIZE), pygame.RESIZABLE)
     #default_game.Default_Game()
-    menu.New_Menu(screen)
+    menu.Menu(screen)
     
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)

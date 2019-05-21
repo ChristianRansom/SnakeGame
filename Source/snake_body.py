@@ -17,7 +17,7 @@ class SnakeBody(GameObject):
         '''
         Constructor
         '''
-        super().__init__(x_value, y_value, size)
+        super(SnakeBody, self).__init__(x_value, y_value, size)
         self.color = (0,128,0) #Green
     
     

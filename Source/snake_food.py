@@ -20,7 +20,7 @@ class SnakeFood(GameObject):
         '''
         Constructor
         '''
-        super().__init__(x_value, y_value, size)
+        super(SnakeFood, self).__init__(x_value, y_value, size)
         self.spawn_food(a_snake)
         self.score_animation_life = 0
         self.animation_score = 0

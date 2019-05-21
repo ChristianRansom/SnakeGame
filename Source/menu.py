@@ -1,29 +1,91 @@
-from tkinter import *
-from tkinter import ttk, simpledialog
 import default_game
-import tkinter.scrolledtext as tkst
 from socket import *
-from PIL import ImageTk,Image
 import threading
 import queue
 import pygame
 import thorpy
-import main
 
-class Menu: 
+
+
+class Menu():
     
-    def __init__(self, game):
+    def __init__(self, screen):
+        self.initialize()
+        
+        self.create_gui(screen)
+        
+        self.set_up(screen)
+        
+    def initialize(self):
+        thorpy.set_theme('human')
+        thorpy.style.MARGINS = (20,20)
+        self.elements = []
+        
+    def create_gui(self, screen):
+        #Create buttons and place them in a box
+        play_button = thorpy.make_button("Play", func=self.restart_game, params={'screen':screen})
+        quit_button = thorpy.make_button("Quit", func=self.quit_game)
+        box = thorpy.Box([play_button, quit_button])
+        self.elements.append(box)
+        
+        #self.elements.append(thorpy.make_button("Play", func=self.restart_game, params={'screen':screen}))
+        #self.elements.append(thorpy.make_button("Quit", func=self.quit_game))
+        
+    def set_up(self, screen):
+        self.main_box = thorpy.Box(self.elements)
+        self.menu = thorpy.Menu(self.main_box)
+        self.render(screen, self.menu)
+        self.start(screen)
     
-        self.root = Tk() #Could swap this to a frame or something
+    def start(self, screen):
+        #Menu loop
+        menu_start = True
+        while menu_start == True:
+            #pygame.init()
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.restart_game(screen)
+                if event.type == pygame.QUIT:
+                    menu_start = False
+                    break
+                self.menu.react(event) #Handles function binding to buttons and gui elements
+    
+    def render(self, screen, menu):        
+        white = (255,255,255)
+        screen.fill(white)
+        h, w = pygame.display.get_surface().get_size()
+        for element in menu.get_population():
+            element.surface = screen
+        self.main_box.set_center((h // 2, w // 2))
+        self.main_box.blit()
+        self.main_box.update()
+
+        pygame.display.update()
+        
+    def restart_game(self, screen):
+        default_game.Default_Game(screen)
+
+    def quit_game(self):
+        sys.exit(0)
+        
+class Score_Menu(Menu): 
+    
+    def __init__(self, screen, game):
         self.game = game
+        #This is the proper way to call a super class method
+        super(Score_Menu, self).__init__(screen) 
+        
+    def initialize(self):
+        super(Score_Menu, self).initialize()
         self.winner = False
         
-        self.root.title("Snake")
-        
-        self.get_player_name(self.root)
-        
-        self.root.mainloop()
+    def create_gui(self, screen):
+        super(Score_Menu, self).create_gui(screen)
+        self.elements.append(thorpy.make_button("SCORE_MENU", func=self.quit_game))
+
     
+    '''
     def get_player_name(self, root):
         #A gui for the user to input their name before the score is saved and rank displayed
         Label(root, text="Name").grid(row=0)
@@ -37,7 +99,9 @@ class Menu:
         submit_name_btn.grid(column=0, row=2, columnspan=2)
         self.e1.focus_force()
         self.root.bind('<Return>', self.submit_player_name)
+    '''
 
+    '''
     #need args* paramater because its passed by tk for the input types of frames
     def submit_player_name(self, *args):
         #submits the player name to save the score and display ranking info
@@ -52,7 +116,8 @@ class Menu:
             self.save_score_thread() #start saving score in a separate thread
 
             self.build_score_display()
-    
+    '''
+        
     def save_score_thread(self):
         '''Multi threading inspired by 
         https://scorython.wordpress.com/2016/06/27/multithreading-with-tkinter/
@@ -70,14 +135,16 @@ class Menu:
         try:
             self.res = self.thread_queue.get(0)
             #self.mylabel.config(text='Loop terminated')
-            
+            '''
             self.display_rankings(self.root)
 
             if self.winner:
                 canvas = Canvas(self.root, width = 300, height = 300)
                 canvas.grid(column=2, row=6)
                 img = ImageTk.PhotoImage(Image.open("trophy.png"))
+                
                 canvas.create_image(20,20, anchor=NW, image=img)
+            '''
         except queue.Empty:
             #Continues to check if the save_score thread is finished
             self.root.after(100, self.listen_for_result) 
@@ -85,7 +152,7 @@ class Menu:
         
     def build_score_display(self):
         #Displays the main end screen buttons and information 
-        
+        '''
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         
@@ -100,6 +167,7 @@ class Menu:
         for child in self.root.winfo_children(): child.grid_configure(padx=5, pady=5)
         
         self.root.bind('<Return>', self.restart_game)
+        '''
         
     def save_score(self):
         try:
@@ -142,6 +210,7 @@ class Menu:
             
     def display_rankings(self, frame):
         #Displays the results from the server about score ranking and info
+        '''
         self.loading_label.config(text= "Rank: " + str(self.rank))
         txt = tkst.ScrolledText(frame,width=40,height=10)
         txt.grid(column=2, row=5)
@@ -152,6 +221,7 @@ class Menu:
         for i in top_ten_list[:-1]:
             txt.insert(INSERT, str(temp) + ": " + str(i) + "\n")
             temp = temp + 1
+        '''
     
     def local_score_save(self, game):
         try:
@@ -205,40 +275,17 @@ class Menu:
             pass
         '''
 
-
-class New_Menu(Menu):
+class Pause_Menu(Menu):
     
     def __init__(self, screen):
-        #screen = pygame.display.set_mode((main.DEFAULT_SIZE))
-        screen.fill((255,255,255))
-        #Create buttons and place them in a box
-        play_button = thorpy.make_button("Play", func=self.restart_game, params={'screen':screen })
-        quit_button = thorpy.make_button("Quit", func=self.quit_game)
-        self.box = thorpy.Box(elements=[play_button, quit_button])
+        super(Pause_Menu, self).__init__(screen)
         
-        menu = thorpy.Menu(self.box)
-        
-        self.render(screen, menu)
+class Player_Name_Menu(Menu):
     
-        #Menu loop
-        menu_start = True
-        while menu_start == True:
-            #pygame.init()
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        self.restart_game(screen)
-                if event.type == pygame.QUIT:
-                    menu_start = False
-                    break
-                menu.react(event) #Handles function binding to buttons and gui elements
-                
-    def render(self, screen, menu):
-        white = (255,255,255)
-        screen.fill(white)
-        h, w = pygame.display.get_surface().get_size()
-        for element in menu.get_population():
-            element.surface = screen
-        self.box.set_center((h // 2, w // 2))
-        self.box.blit()
-        self.box.update()
+    def __init__(self, screen, game):
+        super(Player_Name_Menu, self).__init__(screen)
+        
+    def create_gui(self, screen):
+        super(Player_Name_Menu, self).create_gui(screen)
+        thorpy.make_text("my text")
+
