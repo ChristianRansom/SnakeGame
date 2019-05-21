@@ -15,11 +15,11 @@ GAME_VERSION = 1.6
 
 class Default_Game(Game):
 
-    def __init__(self, screen):
+    def __init__(self, screen, player_name = ""):
         super(Default_Game, self).__init__(screen)
         self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
         self.food = snake_food.SnakeFood(SNAKE_SIZE, self.game_snake, self.tile_height, self.tile_width)
-        self.player_name = ""
+        self.player_name = player_name
         self.passthrough = True
         self.direction_lock = False
 

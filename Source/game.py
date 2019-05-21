@@ -48,7 +48,7 @@ class Game(object):
             self.clock.tick(self.game_speed)
             #pygame.time.wait(100)
 
-        menu.Score_Menu(self.screen, self) #End screen menu
+        menu.Player_Name_Menu(self.screen, self) #End screen menu
 
     @abstractmethod
     def process_input(self):

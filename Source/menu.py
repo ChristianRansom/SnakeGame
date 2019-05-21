@@ -26,10 +26,10 @@ class Menu():
     def create_gui(self, screen):
         #Create buttons and place them in a box
         play_button = thorpy.make_button("Play", func=self.restart_game)
+        play_button.set_size((200,100))
         quit_button = thorpy.make_button("Quit", func=self.quit_game)
         box = thorpy.Box([play_button, quit_button])
         self.elements.append(box)
-        
         #self.elements.append(thorpy.make_button("Play", func=self.restart_game, params={'screen':screen}))
         #self.elements.append(thorpy.make_button("Quit", func=self.quit_game))
         
@@ -47,11 +47,13 @@ class Menu():
                 self.menu.react(event) #Handles function binding to buttons and gui elements
                 if event.type == pygame.QUIT:
                     self.quit_game()
+        print("menu loop finished")
         self.finish(screen)
         
     def finish(self, screen):
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
             return default_game.Default_Game(screen)
+        return None
     
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -77,6 +79,51 @@ class Menu():
     def quit_game(self):
         self.running = False
         
+class Pause_Menu(Menu):
+    
+    def __init__(self, screen):
+        super(Pause_Menu, self).__init__(screen)
+        
+class Player_Name_Menu(Menu):
+    
+    def __init__(self, screen, game):
+        self.game = game
+        super(Player_Name_Menu, self).__init__(screen)
+        
+    def create_gui(self, screen):
+        #super(Player_Name_Menu, self).create_gui(screen)
+        self.input = thorpy.Inserter(name="Enter Your Name:", value=self.game.player_name)
+        submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
+        self.elements.append(self.input)
+        self.elements.append(submit_button)
+        
+    def submit_player_name(self):
+        self.game.player_name = self.input.get_value()
+        self.running = False
+
+    def finish(self, screen):
+        return Score_Menu(screen, self.game) #End screen menu
+    
+    def handle_events(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                self.submit_player_name()
+    '''
+    def get_player_name(self, root):
+        #A gui for the user to input their name before the score is saved and rank displayed
+        Label(root, text="Name").grid(row=0)
+        
+        self.e1 = Entry(root)
+        
+        self.e1.grid(row=0, column=1)
+        self.e1.insert(END, self.game.player_name)
+        
+        submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
+        submit_name_btn.grid(column=0, row=2, columnspan=2)
+        self.e1.focus_force()
+        self.root.bind('<Return>', self.submit_player_name)
+    '''
+   
 class Score_Menu(Menu): 
     
     def __init__(self, screen, game):
@@ -91,7 +138,13 @@ class Score_Menu(Menu):
     def create_gui(self, screen):
         super(Score_Menu, self).create_gui(screen)
         self.elements.append(thorpy.make_text("Score Menu"))
+        self.elements.append(thorpy.make_text(self.game.player_name))
 
+    def finish(self, screen):
+        if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
+            return default_game.Default_Game(screen, self.game.player_name)
+        return None
+    
     
     '''
     #need args* paramater because its passed by tk for the input types of frames
@@ -141,10 +194,9 @@ class Score_Menu(Menu):
             #Continues to check if the save_score thread is finished
             self.root.after(100, self.listen_for_result) 
             
-        
+    '''
     def build_score_display(self):
         #Displays the main end screen buttons and information 
-        '''
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         
@@ -159,7 +211,7 @@ class Score_Menu(Menu):
         for child in self.root.winfo_children(): child.grid_configure(padx=5, pady=5)
         
         self.root.bind('<Return>', self.restart_game)
-        '''
+    '''
         
     def save_score(self):
         try:
@@ -250,43 +302,3 @@ class Score_Menu(Menu):
         f.close()
         print('Done receiving')
         return f
-
-class Pause_Menu(Menu):
-    
-    def __init__(self, screen):
-        super(Pause_Menu, self).__init__(screen)
-        
-class Player_Name_Menu(Menu):
-    
-    def __init__(self, screen, game):
-        self.player_name = game.player_name
-        super(Player_Name_Menu, self).__init__(screen)
-        
-    def create_gui(self, screen):
-        #super(Player_Name_Menu, self).create_gui(screen)
-        
-        submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
-        
-        thorpy.make_text("my text")
-        self.elements.append(thorpy.Inserter(name="Enter Your Name:", value=self.player_name))
-        
-    def submit_player_name(self):
-        
-        
-        pass
-
-    '''
-    def get_player_name(self, root):
-        #A gui for the user to input their name before the score is saved and rank displayed
-        Label(root, text="Name").grid(row=0)
-        
-        self.e1 = Entry(root)
-        
-        self.e1.grid(row=0, column=1)
-        self.e1.insert(END, self.game.player_name)
-        
-        submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
-        submit_name_btn.grid(column=0, row=2, columnspan=2)
-        self.e1.focus_force()
-        self.root.bind('<Return>', self.submit_player_name)
-    '''
