@@ -20,6 +20,8 @@ class Menu():
         thorpy.set_theme('human')
         thorpy.style.MARGINS = (20,20)
         self.elements = []
+        self.restart = False
+        self.running = True
         
     def create_gui(self, screen):
         #Create buttons and place them in a box
@@ -39,17 +41,23 @@ class Menu():
     
     def start(self, screen):
         #Menu loop
-        menu_start = True
-        while menu_start == True:
-            #pygame.init()
+        while self.running == True:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        self.restart_game(screen)
-                if event.type == pygame.QUIT:
-                    menu_start = False
-                    break
+                self.handle_events(event)
                 self.menu.react(event) #Handles function binding to buttons and gui elements
+                if event.type == pygame.QUIT:
+                    self.quit_game()
+        
+        #self.menu.functions.quit_menu_func()
+        print("ending menu")
+
+        if self.restart:
+            self.restart_game(screen)
+    
+    def handle_events(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                self.restart = True
     
     def render(self, screen, menu):        
         white = (255,255,255)
@@ -64,10 +72,12 @@ class Menu():
         pygame.display.update()
         
     def restart_game(self, screen):
+        print("turning off menu loop")
+        self.running = False
         default_game.Default_Game(screen)
 
     def quit_game(self):
-        sys.exit(0)
+        self.running = False
         
 class Score_Menu(Menu): 
     
@@ -82,25 +92,9 @@ class Score_Menu(Menu):
         
     def create_gui(self, screen):
         super(Score_Menu, self).create_gui(screen)
-        self.elements.append(thorpy.make_button("SCORE_MENU", func=self.quit_game))
+        self.elements.append(thorpy.make_text("Score Menu"))
 
     
-    '''
-    def get_player_name(self, root):
-        #A gui for the user to input their name before the score is saved and rank displayed
-        Label(root, text="Name").grid(row=0)
-        
-        self.e1 = Entry(root)
-        
-        self.e1.grid(row=0, column=1)
-        self.e1.insert(END, self.game.player_name)
-        
-        submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
-        submit_name_btn.grid(column=0, row=2, columnspan=2)
-        self.e1.focus_force()
-        self.root.bind('<Return>', self.submit_player_name)
-    '''
-
     '''
     #need args* paramater because its passed by tk for the input types of frames
     def submit_player_name(self, *args):
@@ -259,22 +253,6 @@ class Score_Menu(Menu):
         print('Done receiving')
         return f
 
-    def quit_game(self):
-        sys.exit(0)
-        
-    #need args* paramater because its passed by tk for the input types of frames
-    def restart_game(self, screen, *args):
-        default_game.Default_Game(screen)
-        '''
-        try:
-            print("making a new snake")
-            self.root.unbind("<Return>")
-            self.game.restart()
-            self.root.destroy()
-        except ValueError:
-            pass
-        '''
-
 class Pause_Menu(Menu):
     
     def __init__(self, screen):
@@ -283,9 +261,34 @@ class Pause_Menu(Menu):
 class Player_Name_Menu(Menu):
     
     def __init__(self, screen, game):
+        self.player_name = game.player_name
         super(Player_Name_Menu, self).__init__(screen)
         
     def create_gui(self, screen):
-        super(Player_Name_Menu, self).create_gui(screen)
+        #super(Player_Name_Menu, self).create_gui(screen)
+        
+        submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
+        
         thorpy.make_text("my text")
+        self.elements.append(thorpy.Inserter(name="Enter Your Name:", value=self.player_name))
+        
+    def submit_player_name(self):
+        
+        
+        pass
 
+    '''
+    def get_player_name(self, root):
+        #A gui for the user to input their name before the score is saved and rank displayed
+        Label(root, text="Name").grid(row=0)
+        
+        self.e1 = Entry(root)
+        
+        self.e1.grid(row=0, column=1)
+        self.e1.insert(END, self.game.player_name)
+        
+        submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
+        submit_name_btn.grid(column=0, row=2, columnspan=2)
+        self.e1.focus_force()
+        self.root.bind('<Return>', self.submit_player_name)
+    '''
