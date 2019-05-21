@@ -8,40 +8,7 @@ import threading
 import queue
 import pygame
 import thorpy
-
-
-class New_Menu():
-    
-    def __init__(self):
-        pygame.key.set_repeat(300, 30)
-        clock = pygame.time.Clock()
-        screen = pygame.display.set_mode((240,240))
-        screen.fill((255,255,255))
-        
-        
-        
-        #Create buttons and place them in a box
-        play_button = thorpy.make_button("Play", func=thorpy.functions.quit_func)
-        #options_button = thorpy.make_button("Difficulty", func=thorpy.functions.quit_func)
-        quit_button = thorpy.make_button("Quit", func=self.quit_function)
-        box = thorpy.Box(elements=[play_button, quit_button])
-        menu = thorpy.Menu(box)
-        for element in menu.get_population():
-            element.surface = screen
-        box.set_center((120,120))
-        box.blit()
-        box.update()
-    
-        #Menu loop
-        menu_start = True
-        while menu_start == True:
-            #pygame.init()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    menu_start = False
-                    break
-                menu.react(event)
-
+import main
 
 class Menu: 
     
@@ -226,7 +193,9 @@ class Menu:
         sys.exit(0)
         
     #need args* paramater because its passed by tk for the input types of frames
-    def restart_game(self, *args):
+    def restart_game(self, screen, *args):
+        default_game.Default_Game(screen)
+        '''
         try:
             print("making a new snake")
             self.root.unbind("<Return>")
@@ -234,6 +203,42 @@ class Menu:
             self.root.destroy()
         except ValueError:
             pass
+        '''
 
-            
-            
+
+class New_Menu(Menu):
+    
+    def __init__(self, screen):
+        #screen = pygame.display.set_mode((main.DEFAULT_SIZE))
+        screen.fill((255,255,255))
+        #Create buttons and place them in a box
+        play_button = thorpy.make_button("Play", func=self.restart_game, params={'screen':screen })
+        quit_button = thorpy.make_button("Quit", func=self.quit_game)
+        self.box = thorpy.Box(elements=[play_button, quit_button])
+        
+        menu = thorpy.Menu(self.box)
+        
+        self.render(screen, menu)
+    
+        #Menu loop
+        menu_start = True
+        while menu_start == True:
+            #pygame.init()
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.restart_game(screen)
+                if event.type == pygame.QUIT:
+                    menu_start = False
+                    break
+                menu.react(event) #Handles function binding to buttons and gui elements
+                
+    def render(self, screen, menu):
+        white = (255,255,255)
+        screen.fill(white)
+        h, w = pygame.display.get_surface().get_size()
+        for element in menu.get_population():
+            element.surface = screen
+        self.box.set_center((h // 2, w // 2))
+        self.box.blit()
+        self.box.update()

@@ -51,7 +51,7 @@ class Snake():
             i = i + 1
         return False
     
-    def die(self, screen, tile_height, tile_width):
+    def die(self):
         die_color = (128, 0, 0)
         death_sound = pygame.mixer.Sound("Computer Error Alert.wav")
         for body in self.q:
