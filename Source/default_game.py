@@ -21,7 +21,7 @@ class Default_Game(Game):
         self.player_name = player_name
         self.passthrough = True
         self.direction_lock = False
-
+        self.score_multiplier = 1
         self.restart()
 
         self.start()
@@ -69,12 +69,14 @@ class Default_Game(Game):
                 #if food is eaten, grow. This happens on the move after the food is first collided with
                 self.food.spawn_food(self.game_snake)
                 self.game_snake.grow(self.direction)
+                if len(self.game_snake.q) % 10 == 0: #Snake length is divisible by 10 
+                    self.score_multiplier += 1
             else:  #Normal movement with nothing happening
                 move_sound = pygame.mixer.Sound("103336__fawfulgrox__low-bloop.wav")
                 move_sound.set_volume(.05)
                 move_sound.play()
                 self.game_snake.move(self.direction)
-                
+        
             self.detect_collisions()
             self.food.update()
             self.direction_lock = False
@@ -143,8 +145,23 @@ class Default_Game(Game):
     #create text and place in text box
     def render_score(self):
         basicfont = pygame.font.SysFont(None, 30)
-        text = basicfont.render(str(self.score), True, (100, 100, 100), (255, 255, 255))
-        text_rect = text.get_rect()
-        text_rect.bottomright = self.screen.get_rect().bottomright
-        text_rect.x = text_rect.x - self.screen.get_rect().right / 30
-        self.screen.blit(text, text_rect)
+        score_text = basicfont.render("Score: " + str(self.score), True, (100, 100, 100), (255, 255, 255))
+        score_rect = score_text.get_rect()
+        score_rect.bottomright = self.screen.get_rect().bottomright
+        score_rect.x = score_rect.x - self.screen.get_rect().right / 30
+        self.screen.blit(score_text, score_rect)
+        
+        length_text = basicfont.render(("Length: " + str(len(self.game_snake.q))), True, (100, 100, 100), (255, 255, 255))
+        length_rect = length_text.get_rect()
+        length_rect.bottomright = self.screen.get_rect().bottomright
+        length_rect.x = 0 + self.screen.get_rect().right / 30
+        length_rect.y -= length_rect.height
+        self.screen.blit(length_text, length_rect)
+        
+        multiplier_text = basicfont.render(("Multiplier: " + str(self.score_multiplier)), True, (100, 100, 100), (255, 255, 255))
+        multiplier_rect = multiplier_text.get_rect()
+        multiplier_rect.bottomright = self.screen.get_rect().bottomright
+        multiplier_rect.x = 0 + self.screen.get_rect().right / 30
+        multiplier_rect.y -= length_rect.height
+        self.screen.blit(multiplier_text, multiplier_rect)
+
