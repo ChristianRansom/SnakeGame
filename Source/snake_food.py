@@ -37,7 +37,7 @@ class SnakeFood(GameObject):
         self.age = 0
         self.eaten = False 
 
-    def update(self):
+    def update(self, multiplier):
         self.age += 1
         if self.age > GRACE_PERIOD:
             if self.score - self.score_decrement >= MIN_POINTS: 
@@ -52,6 +52,7 @@ class SnakeFood(GameObject):
             self.animation_score = self.score
             self.animation_x = self.x
             self.animation_y = self.y
+            self.play_eat_sound(multiplier)
 
     def render(self, screen, tile_height, tile_width, multiplier=1):
         if self.age > GRACE_PERIOD and self.score - self.score_decrement >= MIN_POINTS:
@@ -98,5 +99,13 @@ class SnakeFood(GameObject):
     def get_score(self, multiplier):
         self.score = self.score * multiplier
         return self.score
+    
+    def play_eat_sound(self, multiplier):
+        if self.score == 200 * multiplier:
+            #http://soundbible.com/1601-Mario-Jumping.html
+            eat_sound = pygame.mixer.Sound("Mario_Jumping-Mike_Koenig-989896458.wav")
+        else:
+            eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
         
+        eat_sound.play()
         

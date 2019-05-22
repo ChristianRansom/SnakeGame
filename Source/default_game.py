@@ -71,6 +71,10 @@ class Default_Game(Game):
                 self.game_snake.grow(self.direction)
                 if len(self.game_snake.q) % 10 == 0: #Snake length is divisible by 10 
                     self.score_multiplier += 1
+                    '''https://freesound.org/people/ProjectsU012/sounds/341695/'''
+                    multiplier_sound = pygame.mixer.Sound("341695__projectsu012__coins-1.wav")
+                    multiplier_sound.set_volume(.05)
+                    multiplier_sound.play()
             else:  #Normal movement with nothing happening
                 move_sound = pygame.mixer.Sound("103336__fawfulgrox__low-bloop.wav")
                 move_sound.set_volume(.05)
@@ -78,7 +82,7 @@ class Default_Game(Game):
                 self.game_snake.move(self.direction)
         
             self.detect_collisions()
-            self.food.update()
+            self.food.update(self.score_multiplier)
             self.direction_lock = False
 
     def detect_collisions(self):
@@ -91,8 +95,6 @@ class Default_Game(Game):
             self.game_over()
         if self.game_snake.collide(self.food):
             #colliding with food
-            eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
-            eat_sound.play()
             self.score += int(self.food.get_score(self.score_multiplier))
             self.food.eaten = True
             
