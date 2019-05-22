@@ -41,8 +41,8 @@ class Menu():
         #Menu loop
         while self.running == True:
             for event in pygame.event.get():
+                self.send_menu_event(event)
                 self.handle_events(event)
-                self.menu.react(event) #Handles function binding to buttons and gui elements
                 if event.type == pygame.QUIT:
                     self.quit_game()
                 if event.type == pygame.VIDEORESIZE: #handle the window resizing
@@ -55,6 +55,9 @@ class Menu():
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
             return default_game.Default_Game(self.screen)
         return None
+    
+    def send_menu_event(self, event):
+        self.menu.react(event) #Handles function binding to buttons and gui elements
     
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -104,6 +107,20 @@ class Player_Name_Menu(Menu):
     def submit_player_name(self):
         self.game.player_name = self.input.get_value()
         self.running = False
+
+    def send_menu_event(self, event):
+        arrow_key = False
+        if event.type == pygame.KEYDOWN: 
+            if event.key == pygame.K_LEFT:
+                arrow_key = True
+            elif event.key == pygame.K_RIGHT:
+                arrow_key = True
+            elif event.key == pygame.K_DOWN:
+                arrow_key = True
+            elif event.key == pygame.K_UP:
+                arrow_key = True  
+            if not arrow_key:
+                self.menu.react(event) #Handles function binding to buttons and gui elements
 
     def finish(self):
         return Score_Menu(self.screen, self.game) #End screen menu
