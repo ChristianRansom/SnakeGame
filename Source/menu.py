@@ -225,20 +225,23 @@ class Score_Menu(Menu):
             self.top_ten = arguments[2]
             
             clientSocket.close()
-        except ConnectionRefusedError:
-            self.rank = "Error connecting to database"
+        except:
+            self.rank = "Error"
             self.top_ten = "Error"
             self.thread_queue.put("Error")
             print("Error connecting or communicating to the score database server")
-            
-        #Edits the text of previously created elements with the data from the remote server
-        self.score_header.set_text("High Scores")
-        self.score_header.center(axis=(True, False))
-        self.rank_text.set_text("Rank: " + str(self.rank))
-        self.rank_text.center(axis=(True, False))
-
-        self.rankings()
-        self.render()
+            self.score_header.set_text("Error Connecting to Database")
+            self.score_header.center(axis=(True, False))
+            self.render()
+        else:
+            #Edits the text of previously created elements with the data from the remote server
+            self.score_header.set_text("High Scores")
+            self.score_header.center(axis=(True, False))
+            self.rank_text.set_text("Rank: " + str(self.rank))
+            self.rank_text.center(axis=(True, False))
+    
+            self.rankings()
+            self.render()
             
     def rankings(self):
         '''Formats the top ten score data received from the server'''
