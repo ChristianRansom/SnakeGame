@@ -3,37 +3,28 @@ Created on Feb 4, 2019
 
 @author: Christian Ransom
 '''
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import pygame
-from pygame.constants import RESIZABLE
-
-GRID_SIZE = 12
+import menu
+GRID_SIZE = 10
 
 class Game(object):
-    '''
-    classdocs
-    '''
 
-    def __init__(self, game_speed = 10):
+    def __init__(self, screen, game_speed = 10):
         '''
         Constructor
         '''
-        
-        
-        #initialize the pygame module and sound
-        pygame.mixer.pre_init(44100, -16, 2, 2048)
-        pygame.mixer.init()
-        pygame.init()
-        
+        #self.logans_code()
+
         self.game_speed = game_speed
         logo = pygame.image.load("SnakeIcon.jpg")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("SNAKE")
-        self.screen = pygame.display.set_mode((480,480), RESIZABLE)
+        self.screen = screen
         self.running = True
         white = (255,255,255)
         self.screen.fill(white)
-        #pygame.draw.rect(screen, (0,0,0), (10,10,10,10), 3)
+        pygame.draw.rect(self.screen, (0,0,0), (10,10,10,10), 3)
         pygame.display.update()
         self.clock = pygame.time.Clock()
         
@@ -41,7 +32,9 @@ class Game(object):
         self.tile_width = 20
         self.calc_tile_size()
         
-        
+    def quit_function(self):
+        pygame.quit()
+
     def start(self):
         #---------------------Main Game Loop---------------------#
         while self.running:
@@ -55,6 +48,7 @@ class Game(object):
             self.clock.tick(self.game_speed)
             #pygame.time.wait(100)
 
+        menu.Player_Name_Menu(self.screen, self) #End screen menu
 
     @abstractmethod
     def process_input(self):
@@ -69,9 +63,8 @@ class Game(object):
         pass
     
     def calc_tile_size(self):
-        #Calcualtes the maximum size for the tiles 
+        #Calculates the maximum size for the tiles 
         h, w = pygame.display.get_surface().get_size()
-        
         self.tile_height = h // GRID_SIZE
         self.tile_width = w // GRID_SIZE
         

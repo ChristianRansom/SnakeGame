@@ -16,6 +16,5 @@ class GameObject:
     def collide(self, other):
         if self.collider and other.collider:
             return (self.x == other.x and self.y == other.y)
-        else:
-            return False
+        return False
             
