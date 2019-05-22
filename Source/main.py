@@ -3,7 +3,6 @@ Created on Jan 29, 2019
 @author: Christian Ransom
 '''
 import pygame
-import default_game
 import menu
 
 DEFAULT_SIZE = (500,500)

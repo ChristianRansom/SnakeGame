@@ -5,10 +5,9 @@ Created on Feb 4, 2019
 '''
 from game import Game, GRID_SIZE
 import snake
-from snake import Snake
 import snake_food
-import menu
 import pygame
+import sys
 
 SNAKE_SIZE = 1
 GAME_VERSION = 1.72
@@ -61,6 +60,7 @@ class Default_Game(Game):
                 self.calc_tile_size()
             if event.type == pygame.QUIT:
                 self.running = False
+                sys.exit(0)
                 
     def update_game(self):
         

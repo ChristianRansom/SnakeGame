@@ -3,7 +3,7 @@ Created on Feb 4, 2019
 
 @author: Christian Ransom
 '''
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import pygame
 import menu
 GRID_SIZE = 10

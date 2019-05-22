@@ -4,6 +4,7 @@ import threading
 import queue
 import pygame
 import thorpy
+import sys
 
 class Menu():
     
@@ -29,8 +30,6 @@ class Menu():
         quit_button = thorpy.make_button("Quit", func=self.quit_game)
         box = thorpy.Box([play_button, quit_button])
         self.elements.append(box)
-        #self.elements.append(thorpy.make_button("Play", func=self.restart_game, params={'screen':screen}))
-        #self.elements.append(thorpy.make_button("Quit", func=self.quit_game))
         
     def set_up(self):
         self.main_box = thorpy.Box(self.elements)
@@ -77,6 +76,7 @@ class Menu():
             
     def quit_game(self):
         self.running = False
+        sys.exit(0)
         
 class Pause_Menu(Menu):
     
@@ -190,12 +190,6 @@ class Score_Menu(Menu):
             self.thread_queue.put(self.rank)
             self.top_ten = arguments[2]
             
-            if arguments[3] == "True": #The player won the game
-                print("You won, waiting to recieve file")
-                file = self.recieve_file(clientSocket)
-                self.winner = True
-                #self.display_image(mainframe, file)
-            
             clientSocket.close()
         except ConnectionRefusedError:
             self.rank = "Error connecting to database"
@@ -227,9 +221,13 @@ class Score_Menu(Menu):
                 self.top_ten_texts[counter].set_font_color(gold)
             counter = counter + 1
 
+
+
+#------------------------Unused---------------------------------------
     def recieve_file(self, s):
         ''' inspired by 
         https://stackoverflow.com/questions/35363975/sending-a-file-over-tcp-sockets
+        Recieves a file from the server. 
         '''
         f = open('trophy.png', 'wb')
         l = s.recv(4096)
@@ -241,19 +239,6 @@ class Score_Menu(Menu):
         f.close()
         print('Done receiving')
         return f 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     def local_score_save(self, game):
         '''Old unused Method that loads and saves high scores from a local data file'''
