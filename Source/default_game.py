@@ -85,7 +85,7 @@ class Default_Game(Game):
                 self.pass_through()
             else:
                 self.game_over()
-        elif self.game_snake.self_collide():
+        if self.game_snake.self_collide():
             self.game_over()
         if self.game_snake.collide(self.food):
             #colliding with food
