@@ -212,7 +212,7 @@ class Score_Menu(Menu):
             game_version = str(default_game.GAME_VERSION)
             extra = "File"
             
-            score_message = message_type + "|" + str(self.game.score) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
+            score_message = message_type + "|" + str(int(self.game.score)) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
             print(score_message)
             clientSocket.send(score_message.encode()) #Send score info
             modifiedSentence = clientSocket.recv(1024) #receive reply 

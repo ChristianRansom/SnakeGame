@@ -10,13 +10,12 @@ import pygame
 import sys
 
 SNAKE_SIZE = 1
-GAME_VERSION = 1.72
+GAME_VERSION = 1.8
 
 class Default_Game(Game):
 
     def __init__(self, screen, player_name = ""):
         super(Default_Game, self).__init__(screen)
-        self.game_snake = snake.Snake(3, SNAKE_SIZE, 0, 0)
         self.food = snake_food.SnakeFood(SNAKE_SIZE, self.game_snake, self.tile_height, self.tile_width)
         self.player_name = player_name
         self.passthrough = True
@@ -27,8 +26,8 @@ class Default_Game(Game):
         self.start()
 
     def restart(self):
-        self.game_snake = snake.Snake(6, SNAKE_SIZE, 0, 0)
-        self.food.spawn_food(self.game_snake)
+        self.game_snake = snake.Snake(5, SNAKE_SIZE, 0, 0)
+        self.food.spawn_food(self.game_snake) #spawning food in random location not ontop of snake
         self.score = 0
         self.direction_lock = False
         self.direction = "east"
@@ -93,7 +92,7 @@ class Default_Game(Game):
             #colliding with food
             eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
             eat_sound.play()
-            self.score += int(self.food.score)
+            self.score += int(self.food.get_score(self.score_multiplier))
             self.food.eaten = True
             
     def game_over(self):
@@ -139,13 +138,13 @@ class Default_Game(Game):
         self.screen.fill(white)
         self.render_score()
         self.game_snake.render(self.screen, self.tile_height, self.tile_width)
-        self.food.render(self.screen, self.tile_height, self.tile_width)
+        self.food.render(self.screen, self.tile_height, self.tile_width, self.score_multiplier)
         pygame.display.update()
     
     #create text and place in text box
     def render_score(self):
         basicfont = pygame.font.SysFont(None, 30)
-        score_text = basicfont.render("Score: " + str(self.score), True, (100, 100, 100), (255, 255, 255))
+        score_text = basicfont.render("Score: " + str(int(self.score)), True, (100, 100, 100), (255, 255, 255))
         score_rect = score_text.get_rect()
         score_rect.bottomright = self.screen.get_rect().bottomright
         score_rect.x = score_rect.x - self.screen.get_rect().right / 30
@@ -158,10 +157,9 @@ class Default_Game(Game):
         length_rect.y -= length_rect.height
         self.screen.blit(length_text, length_rect)
         
-        multiplier_text = basicfont.render(("Multiplier: " + str(self.score_multiplier)), True, (100, 100, 100), (255, 255, 255))
+        multiplier_text = basicfont.render(("Multiplier: " + str(self.score_multiplier)) + "x", True, (100, 100, 100), (255, 255, 255))
         multiplier_rect = multiplier_text.get_rect()
         multiplier_rect.bottomright = self.screen.get_rect().bottomright
         multiplier_rect.x = 0 + self.screen.get_rect().right / 30
-        multiplier_rect.y -= length_rect.height
         self.screen.blit(multiplier_text, multiplier_rect)
 
