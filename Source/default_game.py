@@ -11,7 +11,7 @@ import menu
 import pygame
 
 SNAKE_SIZE = 1
-GAME_VERSION = 1.6
+GAME_VERSION = 1.72
 
 class Default_Game(Game):
 

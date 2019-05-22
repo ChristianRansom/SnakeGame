@@ -5,25 +5,24 @@ import queue
 import pygame
 import thorpy
 
-
-
 class Menu():
     
     def __init__(self, screen):
-        self.initialize()
+        self.initialize(screen)
         
-        self.create_gui(screen)
+        self.create_gui()
         
-        self.set_up(screen)
+        self.set_up()
         
-    def initialize(self):
+    def initialize(self, screen):
+        self.screen = screen
         thorpy.set_theme('human')
-        thorpy.style.MARGINS = (20,20)
+        thorpy.style.MARGINS = (10,10)
         self.elements = []
         self.restart = False
         self.running = True
         
-    def create_gui(self, screen):
+    def create_gui(self):
         #Create buttons and place them in a box
         play_button = thorpy.make_button("Play", func=self.restart_game)
         play_button.set_size((200,100))
@@ -33,13 +32,13 @@ class Menu():
         #self.elements.append(thorpy.make_button("Play", func=self.restart_game, params={'screen':screen}))
         #self.elements.append(thorpy.make_button("Quit", func=self.quit_game))
         
-    def set_up(self, screen):
+    def set_up(self):
         self.main_box = thorpy.Box(self.elements)
         self.menu = thorpy.Menu(self.main_box)
-        self.render(screen, self.menu)
-        self.start(screen)
+        self.render()
+        self.start()
     
-    def start(self, screen):
+    def start(self):
         #Menu loop
         while self.running == True:
             for event in pygame.event.get():
@@ -47,12 +46,12 @@ class Menu():
                 self.menu.react(event) #Handles function binding to buttons and gui elements
                 if event.type == pygame.QUIT:
                     self.quit_game()
-        print("menu loop finished")
-        self.finish(screen)
+        #print("menu loop finished")
+        self.finish()
         
-    def finish(self, screen):
+    def finish(self):
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
-            return default_game.Default_Game(screen)
+            return default_game.Default_Game(self.screen)
         return None
     
     def handle_events(self, event):
@@ -60,12 +59,12 @@ class Menu():
             if event.key == pygame.K_RETURN:
                 self.restart_game()
     
-    def render(self, screen, menu):        
+    def render(self):        
         white = (255,255,255)
-        screen.fill(white)
+        self.screen.fill(white)
         h, w = pygame.display.get_surface().get_size()
-        for element in menu.get_population():
-            element.surface = screen
+        for element in self.menu.get_population():
+            element.surface = self.screen
         self.main_box.set_center((h // 2, w // 2))
         self.main_box.blit()
         self.main_box.update()
@@ -90,9 +89,11 @@ class Player_Name_Menu(Menu):
         self.game = game
         super(Player_Name_Menu, self).__init__(screen)
         
-    def create_gui(self, screen):
+    def create_gui(self):
         #super(Player_Name_Menu, self).create_gui(screen)
         self.input = thorpy.Inserter(name="Enter Your Name:", value=self.game.player_name)
+        self.input.enter()
+        
         submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
         self.elements.append(self.input)
         self.elements.append(submit_button)
@@ -101,28 +102,13 @@ class Player_Name_Menu(Menu):
         self.game.player_name = self.input.get_value()
         self.running = False
 
-    def finish(self, screen):
-        return Score_Menu(screen, self.game) #End screen menu
+    def finish(self):
+        return Score_Menu(self.screen, self.game) #End screen menu
     
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 self.submit_player_name()
-    '''
-    def get_player_name(self, root):
-        #A gui for the user to input their name before the score is saved and rank displayed
-        Label(root, text="Name").grid(row=0)
-        
-        self.e1 = Entry(root)
-        
-        self.e1.grid(row=0, column=1)
-        self.e1.insert(END, self.game.player_name)
-        
-        submit_name_btn = ttk.Button(root, text="Enter", command=self.submit_player_name)
-        submit_name_btn.grid(column=0, row=2, columnspan=2)
-        self.e1.focus_force()
-        self.root.bind('<Return>', self.submit_player_name)
-    '''
    
 class Score_Menu(Menu): 
     
@@ -131,39 +117,44 @@ class Score_Menu(Menu):
         #This is the proper way to call a super class method
         super(Score_Menu, self).__init__(screen) 
         
-    def initialize(self):
-        super(Score_Menu, self).initialize()
+    def initialize(self, screen):
+        super(Score_Menu, self).initialize(screen)
         self.winner = False
         
-    def create_gui(self, screen):
-        super(Score_Menu, self).create_gui(screen)
-        self.elements.append(thorpy.make_text("Score Menu"))
-        self.elements.append(thorpy.make_text(self.game.player_name))
-
-    def finish(self, screen):
-        if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
-            return default_game.Default_Game(screen, self.game.player_name)
-        return None
-    
-    
-    '''
-    #need args* paramater because its passed by tk for the input types of frames
-    def submit_player_name(self, *args):
-        #submits the player name to save the score and display ranking info
-        name_input = self.e1.get()
-        if(name_input == "" or ' ' in name_input or ',' in name_input): #checks for valid name name_input
-            Label(self.root, text="Name cannot be empty, contain spaces, or contain commas").grid(row=1, columnspan=2)
-        else:
-            self.game.player_name = name_input
-            for child in self.root.winfo_children():
-                child.destroy()
-            
-            self.save_score_thread() #start saving score in a separate thread
-
-            self.build_score_display()
-    '''
+    def create_gui(self):
+        super(Score_Menu, self).create_gui()
         
-    def save_score_thread(self):
+        self.your_score = thorpy.make_text("Your Score: " + str(self.game.score))
+        self.your_score.set_font_size(18)
+        self.rank_text = thorpy.make_text("")
+        self.rank_text.set_font_size(18)
+        #self.score_header = thorpy.MultilineText(text="Loading scores from server...")
+        self.score_header = thorpy.make_text(text="Loading...")
+        
+        self.elements.append(self.your_score)
+        self.elements.append(self.rank_text)
+        self.elements.append(self.score_header)
+        
+        self.top_ten_texts = []
+        for i in range(10):
+            text = thorpy.make_text("")
+            self.top_ten_texts.append(text)
+            self.elements.append(text)
+            
+    def set_up(self):
+        self.main_box = thorpy.Box(self.elements)
+        self.menu = thorpy.Menu(self.main_box)
+        #Can't start the network stuff until all the gui elements are created
+        self.make_save_score_thread() #start saving score in a separate thread
+        self.render()
+        self.start()
+        
+    def finish(self):
+        if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
+            return default_game.Default_Game(self.screen, self.game.player_name)
+        return None
+        
+    def make_save_score_thread(self):
         '''Multi threading inspired by 
         https://scorython.wordpress.com/2016/06/27/multithreading-with-tkinter/
         '''
@@ -171,48 +162,8 @@ class Score_Menu(Menu):
         self.thread_queue = queue.Queue()
         self.new_thread = threading.Thread(target=self.save_score)
         self.new_thread.start()
-        self.root.after(100, self.listen_for_result)
+        #self.root.after(100, self.listen_for_result)
 
-    def listen_for_result(self):
-        '''
-        Check if there is something in the queue
-        '''
-        try:
-            self.res = self.thread_queue.get(0)
-            #self.mylabel.config(text='Loop terminated')
-            '''
-            self.display_rankings(self.root)
-
-            if self.winner:
-                canvas = Canvas(self.root, width = 300, height = 300)
-                canvas.grid(column=2, row=6)
-                img = ImageTk.PhotoImage(Image.open("trophy.png"))
-                
-                canvas.create_image(20,20, anchor=NW, image=img)
-            '''
-        except queue.Empty:
-            #Continues to check if the save_score thread is finished
-            self.root.after(100, self.listen_for_result) 
-            
-    '''
-    def build_score_display(self):
-        #Displays the main end screen buttons and information 
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
-        
-        ttk.Button(self.root, text="Restart", command=self.restart_game).grid(column=2, row=1)
-        ttk.Button(self.root, text="Quit", command=self.quit_game).grid(column=2, row=2)
-        ttk.Label(self.root, text = "Score: " + str(self.game.score), justify = CENTER).grid(column=2, row=3)
-        self.loading_label = ttk.Label(self.root, text = "Loading Rankings... ", justify = CENTER)
-        self.loading_label.grid(column=2, row=4)
-        
-        self.root.focus_force()
-        
-        for child in self.root.winfo_children(): child.grid_configure(padx=5, pady=5)
-        
-        self.root.bind('<Return>', self.restart_game)
-    '''
-        
     def save_score(self):
         try:
             server_name = '165.227.51.19' #My server
@@ -252,22 +203,60 @@ class Score_Menu(Menu):
             self.thread_queue.put("Error")
             print("Error connecting or communicating to the score database server")
             
-    def display_rankings(self, frame):
-        #Displays the results from the server about score ranking and info
-        '''
-        self.loading_label.config(text= "Rank: " + str(self.rank))
-        txt = tkst.ScrolledText(frame,width=40,height=10)
-        txt.grid(column=2, row=5)
+        #Edits the text of previously created elements with the data from the remote server
+        self.score_header.set_text("High Scores")
+        self.score_header.center(axis=(True, False))
+        self.rank_text.set_text("Rank: " + str(self.rank))
+        self.rank_text.center(axis=(True, False))
+
+        self.rankings()
+        self.render()
+            
+    def rankings(self):
+        '''Formats the top ten score data received from the server'''
         top_ten = self.top_ten
         top_ten_list = top_ten.split(",", -1)
-        
-        temp = 1
+        counter = 0
+        gold = (150,150,50)
         for i in top_ten_list[:-1]:
-            txt.insert(INSERT, str(temp) + ": " + str(i) + "\n")
-            temp = temp + 1
+            self.top_ten_texts[counter].set_text(str(counter + 1) + ": " + str(i))
+            self.top_ten_texts[counter].center(axis=(True, False))
+            #print(str(counter + 1))
+            #print(self.rank)
+            if counter + 1 == int(self.rank): #Highlights their rank in the top ten 
+                self.top_ten_texts[counter].set_font_color(gold)
+            counter = counter + 1
+
+    def recieve_file(self, s):
+        ''' inspired by 
+        https://stackoverflow.com/questions/35363975/sending-a-file-over-tcp-sockets
         '''
+        f = open('trophy.png', 'wb')
+        l = s.recv(4096)
+        print("Recieving...")
+        while (l):
+            print("Recieving...")
+            f.write(l)
+            l = s.recv(4096)
+        f.close()
+        print('Done receiving')
+        return f 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     def local_score_save(self, game):
+        '''Old unused Method that loads and saves high scores from a local data file'''
         try:
             score_file = open("HighScore.txt", "r")
         except FileNotFoundError:
@@ -288,17 +277,4 @@ class Score_Menu(Menu):
                  
         score_file.close()
 
-    def recieve_file(self, s):
-        ''' inspired by 
-        https://stackoverflow.com/questions/35363975/sending-a-file-over-tcp-sockets
-        '''
-        f = open('trophy.png', 'wb')
-        l = s.recv(4096)
-        print("Recieving...")
-        while (l):
-            print("Recieving...")
-            f.write(l)
-            l = s.recv(4096)
-        f.close()
-        print('Done receiving')
-        return f
+    
