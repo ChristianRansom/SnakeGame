@@ -91,23 +91,34 @@ class Pause_Menu(Menu):
         
 class Player_Name_Menu(Menu):
     
-    def __init__(self, screen, game):
+    def __init__(self, screen, game, inputer_error = False):
         self.game = game
+        self.input_error = inputer_error
         super(Player_Name_Menu, self).__init__(screen)
         
     def create_gui(self):
         #super(Player_Name_Menu, self).create_gui(screen)
         self.input = thorpy.Inserter(name="Enter Your Name:", value=self.game.player_name)
         self.input.enter()
-        
         submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
+
         self.elements.append(self.input)
         self.elements.append(submit_button)
-        
+        if self.input_error:
+            error_message = thorpy.make_text("The name cannot contain a , or spaces or a |.")    
+            self.elements.append(error_message)
+            
     def submit_player_name(self):
         self.game.player_name = self.input.get_value()
+        self.check_input(self.game.player_name )
         self.running = False
 
+    def check_input(self, input):
+        if ',' in input or ' ' in input or "|" in input:
+            self.input_error = True
+        else:
+            self.input_error = False
+        
     def send_menu_event(self, event):
         arrow_key = False
         if event.type == pygame.KEYDOWN: 
@@ -123,7 +134,10 @@ class Player_Name_Menu(Menu):
                 self.menu.react(event) #Handles function binding to buttons and gui elements
 
     def finish(self):
-        return Score_Menu(self.screen, self.game) #End screen menu
+        if not self.input_error:
+            return Score_Menu(self.screen, self.game) #End screen menu
+        else:
+            return Player_Name_Menu(self.screen, self.game, True) #Ask for name again
     
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
