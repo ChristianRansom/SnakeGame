@@ -97,11 +97,19 @@ class Player_Name_Menu(Menu):
         super(Player_Name_Menu, self).__init__(screen)
         
     def create_gui(self):
-        #super(Player_Name_Menu, self).create_gui(screen)
+        score = thorpy.make_text("Score: " + str(self.game.score))
+        score.set_font_size(18)
+        snake_length = thorpy.make_text("Length: " + str(len(self.game.game_snake.q)))
+        snake_length.set_font_size(18)
+        #self.score_header = thorpy.MultilineText(text="Loading scores from server...")
+        self.score_header = thorpy.make_text(text="Loading...")
+        
         self.input = thorpy.Inserter(name="Enter Your Name:", value=self.game.player_name)
         self.input.enter()
         submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
-
+        
+        self.elements.append(score)
+        self.elements.append(snake_length)
         self.elements.append(self.input)
         self.elements.append(submit_button)
         if self.input_error:
@@ -160,12 +168,15 @@ class Score_Menu(Menu):
         
         self.your_score = thorpy.make_text("Your Score: " + str(self.game.score))
         self.your_score.set_font_size(18)
+        snake_length = thorpy.make_text("Length: " + str(len(self.game.game_snake.q)))
+        snake_length.set_font_size(16)
         self.rank_text = thorpy.make_text("")
         self.rank_text.set_font_size(18)
         #self.score_header = thorpy.MultilineText(text="Loading scores from server...")
         self.score_header = thorpy.make_text(text="Loading...")
         
         self.elements.append(self.your_score)
+        self.elements.append(snake_length)
         self.elements.append(self.rank_text)
         self.elements.append(self.score_header)
         
