@@ -45,6 +45,9 @@ class Menu():
                 self.menu.react(event) #Handles function binding to buttons and gui elements
                 if event.type == pygame.QUIT:
                     self.quit_game()
+                if event.type == pygame.VIDEORESIZE: #handle the window resizing
+                    self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                    self.render()
         #print("menu loop finished")
         self.finish()
         
