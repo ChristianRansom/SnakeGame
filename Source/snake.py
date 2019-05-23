@@ -9,6 +9,7 @@ import snake_body
 import game
 import copy
 import pygame
+import main
 
 class Snake():
     '''
@@ -53,7 +54,7 @@ class Snake():
     
     def die(self):
         die_color = (128, 0, 0)
-        death_sound = pygame.mixer.Sound("Computer Error Alert.wav")
+        death_sound = pygame.mixer.Sound(main.resource_path("Computer_Error_Alert.wav"))
         for body in self.q:
             body.color = die_color
         death_sound.play()

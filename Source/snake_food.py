@@ -7,6 +7,7 @@ from game_object import GameObject
 import random 
 import game
 import pygame
+import main
 
 BASE_POINTS = 200 #Max points that can be gotten
 MIN_POINTS = 50 #Minimum of points after the full decay time has happened
@@ -85,7 +86,7 @@ class SnakeFood(GameObject):
         self.reset_food()
     
     def render_food_points(self, screen, tile_height, tile_width, multiplier=1):
-        basicfont = pygame.font.SysFont(None, 30)
+        basicfont = pygame.font.SysFont("Arial", 30)
         score_color = (255, 255, 255)
         if self.animation_score == 200 * multiplier:
             score_color = (255, 255, 0)
@@ -103,9 +104,9 @@ class SnakeFood(GameObject):
     def play_eat_sound(self, multiplier):
         if self.score == 200 * multiplier:
             #http://soundbible.com/1601-Mario-Jumping.html
-            eat_sound = pygame.mixer.Sound("Mario_Jumping-Mike_Koenig-989896458.wav")
+            eat_sound = pygame.mixer.Sound(main.resource_path("Mario_Jumping-Mike_Koenig-989896458.wav"))
         else:
-            eat_sound = pygame.mixer.Sound("GUI Sound Effects_038.wav")
+            eat_sound = pygame.mixer.Sound(main.resource_path("GUI Sound Effects_038.wav"))
         
         eat_sound.play()
         
