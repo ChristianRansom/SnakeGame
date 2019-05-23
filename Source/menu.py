@@ -10,8 +10,6 @@ class Menu():
     
     def __init__(self, screen):
         self.initialize(screen)
-        self.speed = 7
-        self.difficulty = "normal"
         
         self.create_gui()
         
@@ -19,6 +17,7 @@ class Menu():
         
     def initialize(self, screen):
         self.screen = screen
+        self.difficulty = "normal"
         thorpy.set_theme('human')
         thorpy.style.MARGINS = (10,10)
         self.elements = []
@@ -39,12 +38,6 @@ class Menu():
         choices = [("Easy",self.set_easy), ("Normal (Recomended)",self.set_normal), ("Hard",self.set_hard)]
         thorpy.launch_blocking_choices("Difficulty\n", choices) #for auto unblit
         
-        if self.difficulty == "easy":
-            self.speed = 4
-        elif self.difficulty == "normal":
-            self.speed = 7
-        elif self.difficulty == "hard":
-            self.speed = 10
         self.difficulty_button.set_text("Difficulty: " + self.difficulty)
         self.render()
 
@@ -70,7 +63,7 @@ class Menu():
         
     def finish(self):
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
-            return default_game.Default_Game(self.screen, self.speed)
+            return default_game.Default_Game(self.screen, self.difficulty)
         return None
     
     def send_menu_event(self, event):
@@ -187,6 +180,7 @@ class Score_Menu(Menu):
         
     def initialize(self, screen):
         super(Score_Menu, self).initialize(screen)
+        self.difficulty = self.game.difficulty
         self.winner = False
         
     def create_gui(self):
@@ -222,7 +216,7 @@ class Score_Menu(Menu):
         
     def finish(self):
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
-            return default_game.Default_Game(self.screen, self.speed, self.game.player_name)
+            return default_game.Default_Game(self.screen, self.difficulty, self.game.player_name)
         return None
         
     def make_save_score_thread(self):
@@ -245,7 +239,7 @@ class Score_Menu(Menu):
             
             message_type = "Submit Score"
             player_name = self.game.player_name
-            game_type = "testing"
+            game_type = ("testing_" + "default_" + self.game.difficulty)
             game_version = str(default_game.GAME_VERSION)
             extra = "File"
             

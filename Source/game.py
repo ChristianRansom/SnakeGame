@@ -10,13 +10,17 @@ GRID_SIZE = 10
 
 class Game(object):
 
-    def __init__(self, screen, game_speed = 10):
+    def __init__(self, screen, difficulty = "normal"):
         '''
         Constructor
         '''
-        #self.logans_code()
-
-        self.game_speed = game_speed
+        self.difficulty = difficulty
+        if difficulty == "easy":
+            self.game_speed = 4
+        elif difficulty == "normal":
+            self.game_speed = 7
+        elif difficulty == "hard":
+            self.game_speed = 10
         logo = pygame.image.load("SnakeIcon.jpg")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("SNAKE")
