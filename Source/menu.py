@@ -10,6 +10,8 @@ class Menu():
     
     def __init__(self, screen):
         self.initialize(screen)
+        self.speed = 7
+        self.difficulty = "normal"
         
         self.create_gui()
         
@@ -26,11 +28,26 @@ class Menu():
     def create_gui(self):
         #Create buttons and place them in a box
         play_button = thorpy.make_button("Play", func=self.restart_game)
-        play_button.set_size((200,100))
+        play_button.set_size((200,50))
         quit_button = thorpy.make_button("Quit", func=self.quit_game)
         box = thorpy.Box([play_button, quit_button])
         self.elements.append(box)
+        self.difficulty_button = thorpy.make_button("Difficulty: " + self.difficulty, func=self.select_dificulty)
+        self.elements.append(self.difficulty_button)
         
+    def select_dificulty(self):
+        choices = [("Easy",self.set_easy), ("Normal (Recomended)",self.set_normal), ("Hard",self.set_hard)]
+        thorpy.launch_blocking_choices("Difficulty\n", choices) #for auto unblit
+        
+        if self.difficulty == "easy":
+            self.speed = 4
+        elif self.difficulty == "normal":
+            self.speed = 7
+        elif self.difficulty == "hard":
+            self.speed = 10
+        self.difficulty_button.set_text("Difficulty: " + self.difficulty)
+        self.render()
+
     def set_up(self):
         self.main_box = thorpy.Box(self.elements)
         self.menu = thorpy.Menu(self.main_box)
@@ -53,7 +70,7 @@ class Menu():
         
     def finish(self):
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
-            return default_game.Default_Game(self.screen)
+            return default_game.Default_Game(self.screen, self.speed)
         return None
     
     def send_menu_event(self, event):
@@ -83,6 +100,15 @@ class Menu():
     def quit_game(self):
         self.running = False
         sys.exit(0)
+    
+    def set_easy(self):
+        self.difficulty = "easy" 
+        
+    def set_normal(self):
+        self.difficulty = "normal"
+        
+    def set_hard(self):
+        self.difficulty = "hard"
         
 class Pause_Menu(Menu):
     
@@ -138,8 +164,8 @@ class Player_Name_Menu(Menu):
                 arrow_key = True
             elif event.key == pygame.K_UP:
                 arrow_key = True  
-            if not arrow_key:
-                self.menu.react(event) #Handles function binding to buttons and gui elements
+        if not arrow_key:
+            self.menu.react(event) #Handles function binding to buttons and gui elements
 
     def finish(self):
         if not self.input_error:
@@ -196,7 +222,7 @@ class Score_Menu(Menu):
         
     def finish(self):
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
-            return default_game.Default_Game(self.screen, self.game.player_name)
+            return default_game.Default_Game(self.screen, self.speed, self.game.player_name)
         return None
         
     def make_save_score_thread(self):

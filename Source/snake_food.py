@@ -12,7 +12,7 @@ BASE_POINTS = 200 #Max points that can be gotten
 MIN_POINTS = 50 #Minimum of points after the full decay time has happened
 DECAY_START = 20 #The average amount of decay that should happen each move 
 DECAY_FACTOR = .5 #How much higher does the score decrement start as a factor of the decay base
-GRACE_PERIOD = 8 #number of moves before food starts to decay
+GRACE_PERIOD = 10 #number of moves before food starts to decay
 
 class SnakeFood(GameObject):
 

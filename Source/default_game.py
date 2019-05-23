@@ -10,12 +10,12 @@ import pygame
 import sys
 
 SNAKE_SIZE = 1
-GAME_VERSION = 1.8
+GAME_VERSION = 1.81
 
 class Default_Game(Game):
 
-    def __init__(self, screen, player_name = ""):
-        super(Default_Game, self).__init__(screen)
+    def __init__(self, screen, speed, player_name = ""):
+        super(Default_Game, self).__init__(screen, speed)
         self.game_snake = snake.Snake(5, SNAKE_SIZE, 0, 0)
         self.food = snake_food.SnakeFood(SNAKE_SIZE, self.game_snake, self.tile_height, self.tile_width)
         self.player_name = player_name
