@@ -8,6 +8,7 @@ import snake
 import snake_food
 import pygame
 import sys
+import main
 
 SNAKE_SIZE = 1
 GAME_VERSION = 1.81
@@ -72,7 +73,7 @@ class Default_Game(Game):
                 if len(self.game_snake.q) % 10 == 0: #Snake length is divisible by 10 
                     self.increase_multiplier()
             else:  #Normal movement with nothing happening
-                move_sound = pygame.mixer.Sound("103336__fawfulgrox__low-bloop.wav")
+                move_sound = pygame.mixer.Sound(main.resource_path("103336__fawfulgrox__low-bloop.wav"))
                 move_sound.set_volume(.05)
                 move_sound.play()
                 self.game_snake.move(self.direction)
@@ -84,7 +85,7 @@ class Default_Game(Game):
     def increase_multiplier(self):
         self.score_multiplier += 1
         '''https://freesound.org/people/ProjectsU012/sounds/341695/'''
-        multiplier_sound = pygame.mixer.Sound("341695__projectsu012__coins-1.wav")
+        multiplier_sound = pygame.mixer.Sound(main.resource_path("341695__projectsu012__coins-1.wav"))
         multiplier_sound.set_volume(.05)
         multiplier_sound.play()
         self.multiplier_animation_life = 15
@@ -151,7 +152,7 @@ class Default_Game(Game):
     
     #create text and place in text box
     def render_score(self):
-        basicfont = pygame.font.SysFont(None, 30)
+        basicfont = pygame.font.SysFont("Arial", 30)
         score_text = basicfont.render("Score: " + str(int(self.score)), True, (100, 100, 100), (255, 255, 255))
         score_rect = score_text.get_rect()
         score_rect.bottomright = self.screen.get_rect().bottomright
@@ -175,7 +176,7 @@ class Default_Game(Game):
         if self.multiplier_animation_life > 0: #how long to keep the score animation around
             self.multiplier_animation_life -= 1
             
-            basicfont = pygame.font.SysFont(None, 50)
+            basicfont = pygame.font.SysFont("Arial", 50)
             multiplier_animation_color = (255, 255, 255)
             text = basicfont.render((str(int(self.score_multiplier)) + "x"), True, (100, 100, 100), multiplier_animation_color)
             text_rect = text.get_rect()

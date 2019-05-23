@@ -6,6 +6,7 @@ Created on Feb 4, 2019
 from abc import abstractmethod
 import pygame
 import menu
+import main
 GRID_SIZE = 10
 
 class Game(object):
@@ -21,7 +22,8 @@ class Game(object):
             self.game_speed = 7
         elif difficulty == "hard":
             self.game_speed = 10
-        logo = pygame.image.load("SnakeIcon.jpg")
+            
+        logo = pygame.image.load(main.resource_path("SnakeIcon.jpg"))
         pygame.display.set_icon(logo)
         pygame.display.set_caption("SNAKE")
         self.screen = screen
