@@ -23,7 +23,7 @@ class Default_Game(Game):
         self.direction_lock = False
         self.score_multiplier = 1
         self.restart()
-
+        self.multiplier_animation_life = 0
         self.start()
 
     def restart(self):
@@ -70,11 +70,7 @@ class Default_Game(Game):
                 self.food.spawn_food(self.game_snake)
                 self.game_snake.grow(self.direction)
                 if len(self.game_snake.q) % 10 == 0: #Snake length is divisible by 10 
-                    self.score_multiplier += 1
-                    '''https://freesound.org/people/ProjectsU012/sounds/341695/'''
-                    multiplier_sound = pygame.mixer.Sound("341695__projectsu012__coins-1.wav")
-                    multiplier_sound.set_volume(.05)
-                    multiplier_sound.play()
+                    self.increase_multiplier()
             else:  #Normal movement with nothing happening
                 move_sound = pygame.mixer.Sound("103336__fawfulgrox__low-bloop.wav")
                 move_sound.set_volume(.05)
@@ -85,6 +81,14 @@ class Default_Game(Game):
             self.food.update(self.score_multiplier)
             self.direction_lock = False
 
+    def increase_multiplier(self):
+        self.score_multiplier += 1
+        '''https://freesound.org/people/ProjectsU012/sounds/341695/'''
+        multiplier_sound = pygame.mixer.Sound("341695__projectsu012__coins-1.wav")
+        multiplier_sound.set_volume(.05)
+        multiplier_sound.play()
+        self.multiplier_animation_life = 15
+        
     def detect_collisions(self):
         if self.game_snake.wall_collide():
             if self.passthrough == True:
@@ -140,6 +144,7 @@ class Default_Game(Game):
         white = (255,255,255)
         self.screen.fill(white)
         self.render_score()
+        self.render_multiplier_animation()
         self.game_snake.render(self.screen, self.tile_height, self.tile_width)
         self.food.render(self.screen, self.tile_height, self.tile_width, self.score_multiplier)
         pygame.display.update()
@@ -165,4 +170,19 @@ class Default_Game(Game):
         multiplier_rect.bottomright = self.screen.get_rect().bottomright
         multiplier_rect.x = 0 + self.screen.get_rect().right / 30
         self.screen.blit(multiplier_text, multiplier_rect)
-
+        
+    def render_multiplier_animation(self):
+        if self.multiplier_animation_life > 0: #how long to keep the score animation around
+            self.multiplier_animation_life -= 1
+            
+            basicfont = pygame.font.SysFont(None, 50)
+            multiplier_animation_color = (255, 255, 255)
+            text = basicfont.render((str(int(self.score_multiplier)) + "x"), True, (100, 100, 100), multiplier_animation_color)
+            text_rect = text.get_rect()
+            
+            #Center it 
+            h, w = pygame.display.get_surface().get_size()
+            text_rect.x = h // 2
+            text_rect.y = w // 2
+            
+            self.screen.blit(text, text_rect)

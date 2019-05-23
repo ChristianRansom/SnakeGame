@@ -68,7 +68,7 @@ class SnakeFood(GameObject):
         
         if self.score_animation_life > 0: #how long to keep the score animation around
             self.render_food_points(screen, tile_height, tile_width, multiplier)
-            self.score_animation_life = self.score_animation_life - 1
+            self.score_animation_life -= 1
         
         pygame.draw.rect(screen, self.food_color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
      
