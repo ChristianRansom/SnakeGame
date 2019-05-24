@@ -293,13 +293,13 @@ class Score_Menu(Menu):
             extra = "File"
             
             score_message = message_type + "|" + str(int(self.game.score)) + "|" + player_name + "|" + game_type + "|" + game_version + "|" + extra     
-            print(score_message)
+            #print(score_message)
             clientSocket.send(score_message.encode()) #Send score info
             modifiedSentence = clientSocket.recv(1024) #receive reply 
             reply = modifiedSentence.decode()
             arguments = reply.split("|", -1)
             #print(arguments)
-            print('From Server: ', reply)
+            #print('From Server: ', reply)
             self.rank = arguments[1]
             self.thread_queue.put(self.rank)
             self.top_ten = arguments[2]

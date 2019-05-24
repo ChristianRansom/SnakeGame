@@ -100,8 +100,8 @@ class SnakeFood(GameObject):
             text = basicfont.render(str(int(self.animation_score)), True, score_color)
         text_rect = text.get_rect()
         
-        text_rect.x = self.animation_x * tile_height
-        text_rect.y = self.animation_y * tile_width
+        text_rect.x = self.animation_x * tile_width + (tile_width // 2) - text_rect.width // 2
+        text_rect.y = self.animation_y * tile_height + (tile_height // 2) - text_rect.height // 2
         screen.blit(text, text_rect)
     
     def get_score(self, multiplier):

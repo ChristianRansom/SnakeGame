@@ -74,10 +74,7 @@ class Game(object):
         #get_size() -> (width, height)
         w, h = pygame.display.get_surface().get_size()
         h = h - (h // total_tiles) * (total_tiles - GRID_SIZE)
-        print(h)
         self.tile_height = h // GRID_SIZE
         self.tile_width = w // GRID_SIZE
-        print(self.tile_width)
-        print(self.tile_height)
         
         

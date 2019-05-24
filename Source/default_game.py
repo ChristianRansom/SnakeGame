@@ -196,9 +196,11 @@ class Default_Game(Game):
             text_rect = text.get_rect()
             
             #Center it 
-            h, w = pygame.display.get_surface().get_size()
-            text_rect.x = h // 2
-            text_rect.y = w // 2
+            w = self.tile_width * GRID_SIZE
+            h = self.tile_height * GRID_SIZE
+            
+            text_rect.y = h // 2 - text_rect.width // 2
+            text_rect.x = w // 2 - text_rect.height // 2
             
             self.screen.blit(text, text_rect)
     
@@ -215,9 +217,9 @@ class Default_Game(Game):
         self.main_box.set_center((w // 2, h - 50))
         x = 0
         y = self.tile_height * GRID_SIZE
-        width = self.tile_width * GRID_SIZE + self.tile_width
-        height = self.tile_height * 2 + self.tile_height
-        self.main_box.set_size((self.tile_width * GRID_SIZE, self.tile_height * 2))
+        width = self.tile_width * GRID_SIZE
+        height = self.tile_height * 2
+        self.main_box.set_size((width, height))
         
         self.jump_box.set_center((w // 2, h - 50))
         self.main_box.blit()
