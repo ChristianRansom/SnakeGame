@@ -7,6 +7,7 @@ import thorpy
 import sys
 import pickle
 import main
+from appdirs import *
 
 class Menu():
     
@@ -193,16 +194,28 @@ class Player_Name_Menu(Menu):
     def local_score_save(self):
         '''Loads and saves high scores from a local data file'''
         
-        file_name = "local_scores" +  ".bin"
-        score_dict = {}
+        #Use appdirs to find (cross platform) the location of where application data should be stored
+        folder = "Snake"
+        path = user_data_dir()
+        print(path)
         
+        
+        file_name = "local_scores" +  ".bin"
+        
+        file_path_and_name = path + "\\" + folder +"\\"+ file_name
+        score_dict = {}
+        if not os.path.exists(path + "\\" + folder):
+            os.mkdir(path + "\\" + folder)
         try:
-            binary_file = open(main.resource_path(file_name), "rb")
+            #binary_file = open(main.resource_path(file_name), "rb")
+
+            binary_file = open(file_path_and_name, "rb")
         except FileNotFoundError:
             score_dict = {"easy":0, "normal":0, "hard":0}
             score_dict[self.game.difficulty] = self.game.score
             #print("No score file found... making one now")
-            binary_file = open(main.resource_path(file_name), "wb")
+            #binary_file = open(main.resource_path(file_name), "wb")
+            binary_file = open(file_path_and_name, "wb")
             #print("Arguments: " + str(arguments))
             pickle.dump(score_dict, binary_file)
             #print("pickling and saving: " + str(score_dict))
@@ -212,7 +225,7 @@ class Player_Name_Menu(Menu):
             #print("Loaded this from file: " + str(score_dict))
             binary_file.close()
             try:
-                binary_file = open(main.resource_path(file_name), "wb")
+                binary_file = open(file_path_and_name, "wb")
                 if int(score_dict[self.game.difficulty]) < int(self.game.score):
                     score_dict[self.game.difficulty] = self.game.score #update the file
                     #print("updating the binary file dictionary")
@@ -293,7 +306,7 @@ class Score_Menu(Menu):
             
             message_type = "Submit Score"
             player_name = self.game.player_name
-            game_type = ("testing_" + "default_" + self.game.difficulty)
+            game_type = ("alph_release_" + "default_" + self.game.difficulty)
             game_version = str(default_game.GAME_VERSION)
             extra = "File"
             
