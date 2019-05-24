@@ -92,10 +92,12 @@ class SnakeFood(GameObject):
     
     def render_food_points(self, screen, tile_height, tile_width, multiplier=1):
         basicfont = pygame.font.SysFont("Arial", 30)
-        score_color = (255, 255, 255)
+        score_color = (0, 0, 0)
         if self.animation_score == 200 * multiplier:
-            score_color = (255, 255, 0)
-        text = basicfont.render(str(int(self.animation_score)), True, (100, 100, 100), score_color)
+            background_color = (255, 255, 0)
+            text = basicfont.render(str(int(self.animation_score)), True, score_color, background_color)
+        else:
+            text = basicfont.render(str(int(self.animation_score)), True, score_color)
         text_rect = text.get_rect()
         
         text_rect.x = self.animation_x * tile_height
