@@ -56,6 +56,8 @@ class Default_Game(Game):
                     self.direction = "north"
                 elif event.key == pygame.K_SPACE:
                     self.game_snake.jumped = True
+                    jump_sound = pygame.mixer.Sound(main.resource_path("Mario_Jumping-Mike_Koenig-989896458.wav"))
+                    jump_sound.play()
             if event.type == pygame.VIDEORESIZE: #handle the window resizing
                 self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 self.calc_tile_size()

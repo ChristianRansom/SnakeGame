@@ -32,7 +32,7 @@ class SnakeFood(GameObject):
         self.color_change = 255 // (DECAY_START * DECAY_FACTOR)
         
     def reset_food(self):
-        self.food_color = (0,0,0)
+        self.color = (0,0,0)
         self.score = BASE_POINTS
         self.score_decrement = DECAY_START
         self.age = 0
@@ -57,9 +57,9 @@ class SnakeFood(GameObject):
 
     def render(self, screen, tile_height, tile_width, multiplier=1):
         if self.age > GRACE_PERIOD and self.score - self.score_decrement >= MIN_POINTS:
-            if self.food_color[0] + self.color_change < 255: #Max color change
-                color_change = self.food_color[0] + self.color_change
-                self.food_color = (color_change, color_change, 0)
+            if self.color[0] + self.color_change < 255: #Max color change
+                color_change = self.color[0] + self.color_change
+                self.color = (color_change, color_change, 0)
         
         if self.eaten: #Save location of eaten food to display score text
             self.score_animation_life = 10
@@ -76,7 +76,7 @@ class SnakeFood(GameObject):
         
         super().render(screen, self.color, center_x, center_y, self.size * tile_height, self.size * tile_width, tile_height // 7)
         
-        #pygame.draw.rect(screen, self.food_color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
+        #pygame.draw.rect(screen, self.color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
      
     def spawn_food(self, snake):
         #This method doesn't create a new food. It just moves this food to a new random location
@@ -110,7 +110,8 @@ class SnakeFood(GameObject):
     def play_eat_sound(self, multiplier):
         if self.score == 200 * multiplier:
             #http://soundbible.com/1601-Mario-Jumping.html
-            eat_sound = pygame.mixer.Sound(main.resource_path("Mario_Jumping-Mike_Koenig-989896458.wav"))
+            eat_sound = pygame.mixer.Sound(main.resource_path("146726__leszek-szary__jumping.wav"))
+            eat_sound.set_volume(.3)
         else:
             eat_sound = pygame.mixer.Sound(main.resource_path("GUI Sound Effects_038.wav"))
         
