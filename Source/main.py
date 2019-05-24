@@ -22,7 +22,7 @@ def main():
     menu.Menu(screen)
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """ Get absolute path to resource. Required for PyInstaller to build in one file"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = getattr(sys, '_MEIPASS', os.getcwd())

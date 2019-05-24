@@ -15,6 +15,7 @@ class SnakeBody(GameObject):
     #spawns off screen by default
     def __init__(self, size, x_value = -1000, y_value = -1000):
         '''
+        size is relative to tile size 
         Constructor
         '''
         super(SnakeBody, self).__init__(x_value, y_value, size)
@@ -25,7 +26,13 @@ class SnakeBody(GameObject):
         '''tile width and height are how big the squares are on the screen grid are
         self.size Allows a body to render bigger or smaller than a tile size
         self x and y refer to which tile, not the pixel'''
-        pygame.draw.rect(screen, color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
+        
+        center_x = self.x * tile_height + tile_height // 2
+        center_y = self.y * tile_width + tile_width // 2
+        
+        super().render(screen, color, center_x, center_y, self.size * tile_height, self.size * tile_width, tile_height // 7)
+        
+        #pygame.draw.rect(screen, color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
 
     
         

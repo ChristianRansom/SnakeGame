@@ -198,22 +198,22 @@ class Player_Name_Menu(Menu):
         except FileNotFoundError:
             score_dict = {"easy":0, "normal":0, "hard":0}
             score_dict[self.game.difficulty] = self.game.score
-            print("No score file found... making one now")
+            #print("No score file found... making one now")
             binary_file = open(main.resource_path(file_name), "wb")
             #print("Arguments: " + str(arguments))
             pickle.dump(score_dict, binary_file)
-            print("pickling and saving: " + str(score_dict))
+            #print("pickling and saving: " + str(score_dict))
             self.personal_high_score = self.game.score
         else:
             score_dict = pickle.load(binary_file)
-            print("Loaded this from file: " + str(score_dict))
+            #print("Loaded this from file: " + str(score_dict))
             binary_file.close()
             try:
                 binary_file = open(main.resource_path(file_name), "wb")
                 if int(score_dict[self.game.difficulty]) < int(self.game.score):
                     score_dict[self.game.difficulty] = self.game.score #update the file
-                    print("updating the binary file dictionary")
-                    print("saving this in the file: " + str(score_dict))
+                    #print("updating the binary file dictionary")
+                    #print("saving this in the file: " + str(score_dict))
                 pickle.dump(score_dict, binary_file)
                 self.personal_high_score = score_dict[self.game.difficulty]
                 binary_file.close()

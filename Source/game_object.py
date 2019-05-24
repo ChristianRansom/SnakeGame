@@ -3,6 +3,7 @@ Created on Jan 29, 2019
 
 @author: Christian Ransom
 '''
+import pygame 
 
 class GameObject:
     
@@ -18,3 +19,9 @@ class GameObject:
             return (self.x == other.x and self.y == other.y)
         return False
             
+    def render(self, screen, color, center_x, center_y, height, width, thickness=5):
+        x = center_x - height / 2
+        y = center_y - width  / 2
+        
+        pygame.draw.rect(screen, color, (x, y, height, width), thickness)
+

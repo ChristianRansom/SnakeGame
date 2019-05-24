@@ -18,7 +18,7 @@ class Snake():
     
     def __init__(self, body_length = 0, size = 1, x_value = 0, y_value = 0, direction = "east"):
         '''
-        Constructor
+        size is relative to tile size 
         '''
         self.q = deque()
         self.head_color = (10,60,10)
@@ -87,8 +87,10 @@ class Snake():
         self.head.color = (0,128,0) #green
         if self.jumped:
             self.head.collider = False
+            self.head.size = 1.2
         else:
             self.head.collider = True
+            self.head.size = 1
 
     def render(self, screen, tile_height, tile_width):
         jump_color = (0, 0, 255)
