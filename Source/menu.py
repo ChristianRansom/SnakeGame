@@ -233,6 +233,7 @@ class Score_Menu(Menu):
     def initialize(self, screen):
         super(Score_Menu, self).initialize(screen)
         self.difficulty = self.game.difficulty
+        self.open = True
         self.winner = False
         
     def create_gui(self):
@@ -267,6 +268,7 @@ class Score_Menu(Menu):
         self.start()
         
     def finish(self):
+        self.open = False
         if self.restart: #Returns the next scene to finish this menu to prevent a 'memory leak'
             return default_game.Default_Game(self.screen, self.difficulty, self.game.player_name)
         return None
@@ -315,7 +317,6 @@ class Score_Menu(Menu):
             print("Error connecting or communicating to the score database server")
             self.score_header.set_text("Error Connecting to Database")
             self.score_header.center(axis=(True, False))
-            self.render()
         else:
             #Edits the text of previously created elements with the data from the remote server
             self.score_header.set_text("High Scores")
@@ -324,6 +325,8 @@ class Score_Menu(Menu):
             self.rank_text.center(axis=(True, False))
     
             self.rankings()
+        if self.open: #Prevents it from trying to render if the menu has already been closed 
+            print("still rendering because self.open is true")
             self.render()
             
     def rankings(self):
@@ -340,7 +343,28 @@ class Score_Menu(Menu):
             if counter + 1 == int(self.rank): #Highlights their rank in the top ten 
                 self.top_ten_texts[counter].set_font_color(gold)
             counter = counter + 1
+            
+    def select_dificulty(self):
+        self.open = False
+        choices = [("Easy",self.set_easy), ("Normal (Recomended)",self.set_normal), ("Hard",self.set_hard)]
+        thorpy.launch_blocking_choices("Difficulty\n", choices) #for auto unblit
+        self.difficulty_button.set_text("Difficulty: " + self.difficulty)
+        self.render()
+        
+    def set_easy(self):
+        self.difficulty = "easy" 
+        self.open = True
+        self.render()
 
+    def set_normal(self):
+        self.difficulty = "normal"
+        self.open = True
+        self.render()
+
+    def set_hard(self):
+        self.difficulty = "hard"
+        self.open = True
+        self.render()
 #------------------------Unused-------------------------------------#
 
     def recieve_file(self, s):
