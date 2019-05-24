@@ -11,7 +11,7 @@ DEFAULT_SIZE = (500,600)
 #50 extra for the game info bar 
 
 def main():
-    
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     #initialize the pygame module and sound
     #Sound needs to be initialized first to work properly
     pygame.mixer.pre_init(44100, -16, 2, 2048)
