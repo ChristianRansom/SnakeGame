@@ -9,9 +9,11 @@ import snake_food
 import pygame
 import sys
 import main
+import thorpy
 
 SNAKE_SIZE = 1
 GAME_VERSION = 1.81
+MAX_JUMP_COOLDOWN = 7
 
 class Default_Game(Game):
 
@@ -36,6 +38,8 @@ class Default_Game(Game):
         self.score = 0
         self.eaten = False
         self.crashed = False
+        self.jump_cooldown = 0
+        self.set_up_thorpy()
 
 
     def process_input(self): #Handle inputs and events
@@ -55,9 +59,10 @@ class Default_Game(Game):
                     self.direction_lock = True  
                     self.direction = "north"
                 elif event.key == pygame.K_SPACE:
-                    self.game_snake.jumped = True
-                    jump_sound = pygame.mixer.Sound(main.resource_path("Mario_Jumping-Mike_Koenig-989896458.wav"))
-                    jump_sound.play()
+                    if self.jump_cooldown <= 0:
+                        self.game_snake.jumped = True
+                        jump_sound = pygame.mixer.Sound(main.resource_path("Mario_Jumping-Mike_Koenig-989896458.wav"))
+                        jump_sound.play()
             if event.type == pygame.VIDEORESIZE: #handle the window resizing
                 self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 self.calc_tile_size()
@@ -79,7 +84,9 @@ class Default_Game(Game):
                 move_sound.set_volume(.05)
                 move_sound.play()
                 self.game_snake.move(self.direction)
-        
+            if self.game_snake.jumped:
+                self.jump_cooldown = MAX_JUMP_COOLDOWN
+                
             self.detect_collisions()
             self.food.update(self.score_multiplier)
             self.direction_lock = False
@@ -150,6 +157,7 @@ class Default_Game(Game):
         self.render_multiplier_animation()
         self.game_snake.render(self.screen, self.tile_height, self.tile_width)
         self.food.render(self.screen, self.tile_height, self.tile_width, self.score_multiplier)
+        self.render_jump_cooldown()
         pygame.display.update()
     
     #create text and place in text box
@@ -189,3 +197,24 @@ class Default_Game(Game):
             text_rect.y = w // 2
             
             self.screen.blit(text, text_rect)
+    
+    def render_jump_cooldown(self):
+        if self.jump_cooldown >= 0:
+            percent_left = (MAX_JUMP_COOLDOWN - self.jump_cooldown) / MAX_JUMP_COOLDOWN
+            self.jump_bar.set_life(percent_left)
+            self.jump_cooldown -= 1
+        
+        w, h = pygame.display.get_surface().get_size()
+        self.jump_bar.surface = self.screen
+        
+        self.main_box.set_center((h // 2, w - 50))
+        self.main_box.blit()
+        self.main_box.update()
+
+    def set_up_thorpy(self):
+        self.jump_bar = thorpy.LifeBar("jump cool-down")
+
+        self.main_box = thorpy.Box([self.jump_bar])
+        menu = thorpy.Menu(self.main_box)
+        
+        
