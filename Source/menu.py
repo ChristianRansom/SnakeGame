@@ -5,6 +5,8 @@ import queue
 import pygame
 import thorpy
 import sys
+import pickle
+import main
 
 class Menu():
     
@@ -112,10 +114,17 @@ class Player_Name_Menu(Menu):
     
     def __init__(self, screen, game, inputer_error = False):
         self.game = game
+        self.personal_high_score = "Error" 
         self.input_error = inputer_error
         super(Player_Name_Menu, self).__init__(screen)
         
+    def initialize(self, screen):
+        self.local_score_save()
+        Menu.initialize(self, screen)
+        
     def create_gui(self):
+        best_score_text = thorpy.make_text("Personal Best: " + str(self.personal_high_score))
+
         score = thorpy.make_text("Score: " + str(self.game.score))
         score.set_font_size(18)
         snake_length = thorpy.make_text("Length: " + str(len(self.game.game_snake.q)))
@@ -127,6 +136,7 @@ class Player_Name_Menu(Menu):
         self.input.enter()
         submit_button = thorpy.make_button("Submit", func=self.submit_player_name)
         
+        self.elements.append(best_score_text)
         self.elements.append(score)
         self.elements.append(snake_length)
         self.elements.append(self.input)
@@ -170,7 +180,46 @@ class Player_Name_Menu(Menu):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 self.submit_player_name()
-   
+                
+    def local_score_save(self):
+        '''Loads and saves high scores from a local data file'''
+        
+        file_name = "local_scores" +  ".bin"
+        score_dict = {}
+        
+        try:
+            binary_file = open(main.resource_path(file_name), "rb")
+        except FileNotFoundError:
+            score_dict = {"easy":0, "normal":0, "hard":0}
+            score_dict[self.game.difficulty] = self.game.score
+            print("No score file found... making one now")
+            binary_file = open(main.resource_path(file_name), "wb")
+            #print("Arguments: " + str(arguments))
+            pickle.dump(score_dict, binary_file)
+            print("pickling and saving: " + str(score_dict))
+            self.personal_high_score = self.game.score
+        else:
+            score_dict = pickle.load(binary_file)
+            print("Loaded this from file: " + str(score_dict))
+            binary_file.close()
+            try:
+                binary_file = open(main.resource_path(file_name), "wb")
+                #If we broke the personal high score for the difficulty
+                #print(self.game.difficulty)
+                #print(score_dict[self.game.difficulty])
+                #print(str(self.game.score))
+    
+                if int(score_dict[self.game.difficulty]) < int(self.game.score):
+                    score_dict[self.game.difficulty] = self.game.score #update the file
+                    print("updating the binary file dictionary")
+                    print("saving this in the file: " + str(score_dict))
+                pickle.dump(score_dict, binary_file)
+                self.personal_high_score = score_dict[self.game.difficulty]
+                binary_file.close()
+            except:
+                print("Error saving local scores")
+            
+        
 class Score_Menu(Menu): 
     
     def __init__(self, screen, game):
@@ -289,9 +338,8 @@ class Score_Menu(Menu):
                 self.top_ten_texts[counter].set_font_color(gold)
             counter = counter + 1
 
+#------------------------Unused-------------------------------------#
 
-
-#------------------------Unused---------------------------------------
     def recieve_file(self, s):
         ''' inspired by 
         https://stackoverflow.com/questions/35363975/sending-a-file-over-tcp-sockets
@@ -308,26 +356,5 @@ class Score_Menu(Menu):
         print('Done receiving')
         return f 
     
-    def local_score_save(self, game):
-        '''Old unused Method that loads and saves high scores from a local data file'''
-        try:
-            score_file = open("HighScore.txt", "r")
-        except FileNotFoundError:
-            score_file = open("HighScore.txt", "w") #creates the file if it doesn't exist
-            score_file.write(str(game.score))
-            high_score = game.score
-        else:
-            old_score = score_file.read()
-            score_file.close() #close the read version of the file
-            
-            print("old score: " + old_score)
-            if int(old_score) < game.score:
-                score_file = open("HighScore.txt", "w")
-                high_score = str(game.score)
-                score_file.write(str(game.score))
-            else:
-                high_score = old_score
-                 
-        score_file.close()
 
     
