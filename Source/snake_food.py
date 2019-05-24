@@ -98,6 +98,7 @@ class SnakeFood(GameObject):
         screen.blit(text, text_rect)
     
     def get_score(self, multiplier):
+        '''class method only. do not use'''
         self.score = self.score * multiplier
         return self.score
     
