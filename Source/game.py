@@ -30,7 +30,6 @@ class Game(object):
         self.running = True
         white = (255,255,255)
         self.screen.fill(white)
-        pygame.draw.rect(self.screen, (0,0,0), (10,10,10,10), 3)
         pygame.display.update()
         self.clock = pygame.time.Clock()
         

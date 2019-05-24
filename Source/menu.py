@@ -152,6 +152,9 @@ class Player_Name_Menu(Menu):
             self.elements.append(error_message)
             
     def submit_player_name(self):
+        if self.input.get_value() == "": 
+            self.input.enter() #put the cursor back into it after pressing enter
+            return
         self.game.player_name = self.input.get_value()
         self.check_input(self.game.player_name )
         self.running = False
