@@ -12,7 +12,7 @@ import main
 import thorpy
 
 SNAKE_SIZE = 1
-GAME_VERSION = 1.81
+GAME_VERSION = 1.9
 MAX_JUMP_COOLDOWN = 7
 
 class Default_Game(Game):
