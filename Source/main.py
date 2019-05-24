@@ -7,7 +7,8 @@ import menu
 import sys
 import os
 
-DEFAULT_SIZE = (500,500)
+DEFAULT_SIZE = (500,600)
+#50 extra for the game info bar 
 
 def main():
     

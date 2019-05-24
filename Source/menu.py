@@ -44,8 +44,8 @@ class Menu():
         self.render()
 
     def set_up(self):
-        self.main_box = thorpy.Box(self.elements)
-        self.menu = thorpy.Menu(self.main_box)
+        self.info_box = thorpy.Box(self.elements)
+        self.menu = thorpy.Menu(self.info_box)
         self.render()
         self.start()
     
@@ -82,9 +82,9 @@ class Menu():
         h, w = pygame.display.get_surface().get_size()
         for element in self.menu.get_population():
             element.surface = self.screen
-        self.main_box.set_center((h // 2, w // 2))
-        self.main_box.blit()
-        self.main_box.update()
+        self.info_box.set_center((h // 2, w // 2))
+        self.info_box.blit()
+        self.info_box.update()
 
         pygame.display.update()
         
@@ -256,8 +256,8 @@ class Score_Menu(Menu):
             self.elements.append(text)
             
     def set_up(self):
-        self.main_box = thorpy.Box(self.elements)
-        self.menu = thorpy.Menu(self.main_box)
+        self.info_box = thorpy.Box(self.elements)
+        self.menu = thorpy.Menu(self.info_box)
         #Can't start the network stuff until all the gui elements are created
         self.make_save_score_thread() #start saving score in a separate thread
         self.render()

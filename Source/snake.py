@@ -98,6 +98,6 @@ class Snake():
             self.head.color = jump_color
             self.head.collider = False
         for body in self.q:
-            body.render(screen, body.color, tile_height, tile_width)
+            body.render(screen, body.color, tile_width, tile_height)
         if not self.jumped: #Render the head a different color
-            self.head.render(screen, self.head_color, tile_height, tile_width)
+            self.head.render(screen, self.head_color, tile_width, tile_height)

@@ -153,16 +153,17 @@ class Default_Game(Game):
     def render(self):
         white = (255,255,255)
         self.screen.fill(white)
-        self.render_score()
         self.render_multiplier_animation()
         self.game_snake.render(self.screen, self.tile_height, self.tile_width)
         self.food.render(self.screen, self.tile_height, self.tile_width, self.score_multiplier)
+        self.render_info_box()
+        self.render_score()
         self.render_jump_cooldown()
         pygame.display.update()
     
     #create text and place in text box
     def render_score(self):
-        basicfont = pygame.font.SysFont("Arial", 30)
+        basicfont = pygame.font.SysFont("Arial", 25)
         score_text = basicfont.render("Score: " + str(int(self.score)), True, (100, 100, 100), (255, 255, 255))
         score_rect = score_text.get_rect()
         score_rect.bottomright = self.screen.get_rect().bottomright
@@ -207,7 +208,7 @@ class Default_Game(Game):
         w, h = pygame.display.get_surface().get_size()
         self.jump_bar.surface = self.screen
         
-        self.main_box.set_center((h // 2, w - 50))
+        self.main_box.set_center((w // 2, h - 50))
         self.main_box.blit()
         self.main_box.update()
 
@@ -216,5 +217,13 @@ class Default_Game(Game):
 
         self.main_box = thorpy.Box([self.jump_bar])
         menu = thorpy.Menu(self.main_box)
+        
+    def render_info_box(self):
+        grey = (150, 150, 150)
+        x = 0
+        y = self.tile_height * GRID_SIZE
+        width = self.tile_width * GRID_SIZE + self.tile_width
+        height = self.tile_height * 2 + self.tile_height
+        self.screen.fill(grey, (x, y, width, height))
         
         

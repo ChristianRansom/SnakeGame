@@ -71,10 +71,10 @@ class SnakeFood(GameObject):
             self.render_food_points(screen, tile_height, tile_width, multiplier)
             self.score_animation_life -= 1
             
-        center_x = self.x * tile_height + tile_height // 2
-        center_y = self.y * tile_width + tile_width // 2
+        center_x = self.x * tile_width + tile_width // 2
+        center_y = self.y * tile_height + tile_height // 2
         
-        super().render(screen, self.color, center_x, center_y, self.size * tile_height, self.size * tile_width, tile_height // 7)
+        super().render(screen, self.color, center_x, center_y, self.size * tile_width, self.size * tile_height, tile_height // 7)
         
         #pygame.draw.rect(screen, self.color, (self.x * tile_height, self.y * tile_width, self.size * tile_height, self.size * tile_width), tile_height // 7)
      

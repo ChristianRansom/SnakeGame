@@ -69,9 +69,15 @@ class Game(object):
         pass
     
     def calc_tile_size(self):
-        #Calculates the maximum size for the tiles 
-        h, w = pygame.display.get_surface().get_size()
+        #Calculates the maximum size for the tiles
+        total_tiles = 12 
+        #get_size() -> (width, height)
+        w, h = pygame.display.get_surface().get_size()
+        h = h - (h // total_tiles) * (total_tiles - GRID_SIZE)
+        print(h)
         self.tile_height = h // GRID_SIZE
         self.tile_width = w // GRID_SIZE
+        print(self.tile_width)
+        print(self.tile_height)
         
         

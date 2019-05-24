@@ -19,9 +19,9 @@ class GameObject:
             return (self.x == other.x and self.y == other.y)
         return False
             
-    def render(self, screen, color, center_x, center_y, height, width, thickness=5):
-        x = center_x - height / 2
-        y = center_y - width  / 2
-        
-        pygame.draw.rect(screen, color, (x, y, height, width), thickness)
+    def render(self, screen, color, center_x, center_y, width, height, thickness=5):
+        x = center_x - width  / 2
+        y = center_y - height / 2
+        #rect(Surface, color, Rect, width=0) - Rect(left, top, width, height) 
+        pygame.draw.rect(screen, color, (x, y, width, height), thickness)
 
